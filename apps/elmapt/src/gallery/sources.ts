@@ -4,11 +4,14 @@ import type { Gallery, Rung } from "./types";
  * called, and the only code that knows where any of it is served from.
  * Everything else asks for a frame and a width.
  *
- * The base comes from the environment so that moving the photographs to a
- * bucket is a deployment decision rather than a code change. Unset — which is
- * every local checkout — it falls back to the symlink under public/. */
+ * __MEDIA_BASE__ is substituted at build time from the single value in
+ * vite.config.ts — the same one that goes into the hero preload in
+ * index.html. It has to be the same value: a preload the <img> elements do
+ * not match is a wasted request at best, and at worst it is what happened
+ * when this read an environment variable instead and quietly fell back to a
+ * relative path. */
 
-export const RES_BASE = import.meta.env.VITE_RES_BASE || "/res/img";
+export const RES_BASE = __MEDIA_BASE__;
 
 /* For the handful of images that are not gallery frames: the hero, the
  * coverage map. Same base, same guarantee. */

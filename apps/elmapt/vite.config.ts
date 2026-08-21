@@ -99,6 +99,12 @@ export default defineConfig(({ command, mode }) => {
 
   return {
     plugins: [react(), mediaHtml(media), publicAssets()],
+    /* The same value the markup gets, handed to the bundle. index.html and
+       the <img> elements have to agree on where the photographs are, and the
+       only way to guarantee that is for both to come from this one line. */
+    define: {
+      __MEDIA_BASE__: JSON.stringify(media),
+    },
     build: {
       copyPublicDir: false,
     },
