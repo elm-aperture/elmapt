@@ -1,0 +1,43 @@
+.feed__stage {
+  display: grid;
+  grid-template-areas: "stack";
+}
+
+.feed__layer {
+  grid-area: stack;
+  min-width: 0;
+}
+
+.feed__skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(104px, 19vw, 196px), 1fr));
+  gap: clamp(6px, 0.9vw, 12px);
+  transition: opacity var(--elm-dur-3) var(--elm-ease);
+}
+
+.feed__skeleton.is-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.feed__tile {
+  aspect-ratio: 1;
+}
+
+.feed__host {
+  opacity: 0;
+  transition: opacity var(--elm-dur-4) var(--elm-ease);
+}
+
+.feed__host.is-in {
+  opacity: 1;
+}
+
+/* The widget is a custom element with its own shadow tree; these are the
+ * properties that actually cross that boundary. */
+.feed__widget {
+  display: block;
+  width: 100%;
+  font-family: var(--elm-font-sans);
+  color: var(--elm-ink-soft);
+}

@@ -1,0 +1,76 @@
+/* motion — everything eases on --elm-ease unless there is a reason not to. */
+
+.elm-fade-in {
+  opacity: 0;
+  transition: opacity var(--elm-dur-4) var(--elm-ease);
+}
+
+.elm-fade-in.is-in {
+  opacity: 1;
+}
+
+.elm-reveal {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity var(--elm-dur-4) var(--elm-ease),
+    transform var(--elm-dur-4) var(--elm-ease);
+  will-change: opacity, transform;
+}
+
+.elm-reveal.is-in {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* loading placeholder: a held shape plus a slow sweep, so a slow feed reads
+   as "arriving" rather than "broken" */
+.elm-skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(241, 243, 247, 0.035);
+  border-radius: var(--elm-radius-sm);
+}
+
+.elm-skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    100deg,
+    transparent 38%,
+    rgba(241, 243, 247, 0.07) 50%,
+    transparent 62%
+  );
+  animation: elm-sweep 1900ms var(--elm-ease) infinite;
+}
+
+@keyframes elm-sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .elm-reveal,
+  .elm-fade-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .elm-skeleton::after {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}

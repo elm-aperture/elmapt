@@ -1,0 +1,37 @@
+# The site. The photographs are not here — they are on Firebase Hosting, and
+# the app is pointed at them by VITE_RES_BASE.
+
+[build]
+  # Netlify sees pnpm-lock.yaml and runs `pnpm install` at the repo root
+  # before this. To pin the pnpm version, add an exact
+  # "packageManager": "pnpm@x.y.z" to the root package.json — Corepack cannot
+  # take a range.
+  command = "pnpm --filter elmapt build"
+  publish = "apps/elmapt/dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+  # Where the photographs are. Set it here, or in Site configuration →
+  # Environment variables. Absolute URL, no trailing slash. The build fails
+  # with an explicit message if it is missing, rather than shipping a site
+  # with no pictures in it.
+  #
+  # VITE_RES_BASE = "https://elmapt.web.app"
+
+# The router is History-API based: /real-estate/hotel has to be served the app
+# rather than a 404.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"

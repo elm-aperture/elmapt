@@ -1,0 +1,90 @@
+/* controls — one button, three weights. */
+
+.elm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--elm-space-2);
+
+  padding: var(--elm-space-4) var(--elm-space-6);
+  border: 1px solid var(--elm-glass-edge);
+  border-radius: var(--elm-radius-md);
+  background-color: rgba(241, 243, 247, 0.02);
+
+  color: var(--elm-ink-soft);
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-sm);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: var(--elm-track-wider);
+  white-space: nowrap;
+
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+
+  transition:
+    background-color var(--elm-dur-2) var(--elm-ease),
+    border-color var(--elm-dur-2) var(--elm-ease),
+    color var(--elm-dur-2) var(--elm-ease),
+    transform var(--elm-dur-1) var(--elm-ease);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .elm-btn {
+    backdrop-filter: blur(14px) saturate(var(--elm-glass-saturate));
+    -webkit-backdrop-filter: blur(14px) saturate(var(--elm-glass-saturate));
+  }
+}
+
+.elm-btn:hover {
+  background-color: rgba(241, 243, 247, 0.07);
+  border-color: var(--elm-glass-rim);
+  color: var(--elm-ink);
+}
+
+.elm-btn:active {
+  transform: translateY(1px);
+}
+
+.elm-btn--ghost {
+  background-color: transparent;
+  border-color: transparent;
+  padding-inline: var(--elm-space-3);
+}
+
+.elm-btn--ghost:hover {
+  background-color: rgba(241, 243, 247, 0.05);
+  border-color: transparent;
+}
+
+.elm-btn--wide {
+  padding-inline: var(--elm-space-8);
+}
+
+.elm-btn[aria-disabled="true"],
+.elm-btn:disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* a text link that reads as chrome, not as prose */
+.elm-navlink {
+  display: inline-block;
+  padding: var(--elm-space-2) var(--elm-space-1);
+  color: var(--elm-ink-dim);
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-sm);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: var(--elm-track-wide);
+  white-space: nowrap;
+  transition: color var(--elm-dur-2) var(--elm-ease);
+}
+
+.elm-navlink:hover,
+.elm-navlink[aria-current="page"] {
+  color: var(--elm-ink);
+}

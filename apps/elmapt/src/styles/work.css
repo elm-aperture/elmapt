@@ -1,0 +1,120 @@
+.pagehead {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--elm-space-3);
+  padding-top: clamp(36px, 6vw, 84px);
+  padding-bottom: clamp(24px, 4vw, 48px);
+  text-align: center;
+}
+
+.pagehead__eyebrow {
+  color: var(--elm-ink-faint);
+}
+
+.pagehead__title {
+  font-size: var(--elm-text-xl);
+  text-wrap: balance;
+}
+
+.pagehead__sub {
+  max-width: 56ch;
+  color: var(--elm-ink-dim);
+  text-wrap: balance;
+}
+
+.work__set,
+.study__set {
+  padding-bottom: clamp(24px, 4vw, 56px);
+}
+
+.prose__body {
+  margin-inline: auto;
+  text-align: center;
+  text-wrap: pretty;
+}
+
+.figure__img {
+  width: min(100%, 900px);
+  height: auto;
+  margin-inline: auto;
+  border-radius: var(--elm-radius-md);
+  border: 1px solid var(--elm-line-soft);
+}
+
+/* ── category index ───────────────────────────────────────────────────── */
+
+/* One door per body of work. Two columns of widescreen frames, three of
+   upright ones — enough that each is worth looking at, few enough that the
+   page reads as a choice rather than as a gallery. */
+
+.chooser {
+  --chooser-cols: 2;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(26px, 4vw, 52px) 20px;
+  padding-top: clamp(4px, 1vw, 12px);
+}
+
+@media (min-width: 700px) {
+  .chooser {
+    grid-template-columns: repeat(var(--chooser-cols), minmax(0, 1fr));
+  }
+}
+
+.chooser__link {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.2vw, 16px);
+}
+
+.chooser__head {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1.6vw, 20px);
+}
+
+.chooser__name {
+  flex: 0 0 auto;
+  color: var(--elm-ink-soft);
+  transition: color var(--elm-dur-2) var(--elm-ease);
+}
+
+.chooser__link:hover .chooser__name {
+  color: var(--elm-ink);
+}
+
+.chooser__count {
+  flex: 0 0 auto;
+  color: var(--elm-ink-faint);
+}
+
+.chooser__frame {
+  display: block;
+  width: 100%;
+}
+
+.chooser__frame--empty {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--elm-line-soft);
+  background-color: rgba(241, 243, 247, 0.02);
+}
+
+.chooser__empty {
+  color: var(--elm-ink-faint);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chooser__link:hover .elm-tile__img {
+    transform: scale(1.028);
+  }
+}
+
+.work__holding {
+  display: block;
+  padding-block: clamp(28px, 6vw, 72px);
+  text-align: center;
+  margin-inline: auto;
+}

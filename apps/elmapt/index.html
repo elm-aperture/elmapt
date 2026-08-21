@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#07090d" />
+    <meta name="apple-mobile-web-app-title" content="Elm Aperture" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta
+      name="description"
+      content="Elm Aperture — real estate, portrait, event and music photography in Dallas–Fort Worth."
+    />
+
+    <title>Elm Aperture</title>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- One stylesheet request for both families. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- The media host, when the photographs are not served from here. -->
+    %MEDIA_PRECONNECT%
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap"
+    />
+
+    <!-- The hero is the page. Start it before the bundle parses.
+         %MEDIA_BASE% is substituted at build time — see vite.config.ts. -->
+    <link
+      rel="preload"
+      as="image"
+      href="%MEDIA_BASE%/carousel/homepage_01.webp"
+      fetchpriority="high"
+    />
+
+    <!-- Instagram feed host, warmed early so the section fills below the fold. -->
+    <link rel="preconnect" href="https://w.behold.so" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

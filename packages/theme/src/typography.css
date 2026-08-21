@@ -1,0 +1,79 @@
+/* typography — editorial serif for voice, sans for chrome.
+ * Wide-tracked uppercase stands in for small caps: it survives font fallback,
+ * which synthesised small caps does not. */
+
+.elm-display {
+  font-family: var(--elm-font-display);
+  font-size: var(--elm-text-2xl);
+  font-weight: 400;
+  line-height: var(--elm-leading-tight);
+  letter-spacing: var(--elm-track-tight);
+  color: var(--elm-ink);
+}
+
+.elm-wordmark {
+  font-family: var(--elm-font-display);
+  font-size: var(--elm-text-sm);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: var(--elm-track-widest);
+  /* trailing tracking pushes the optical centre right; pull it back */
+  text-indent: var(--elm-track-widest);
+  color: var(--elm-ink);
+  white-space: nowrap;
+}
+
+.elm-eyebrow {
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-xs);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: var(--elm-track-wider);
+  color: var(--elm-ink-dim);
+  white-space: nowrap;
+}
+
+.elm-label {
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-sm);
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: var(--elm-track-wide);
+  color: var(--elm-ink-soft);
+}
+
+/* the one sentence a page is allowed */
+.elm-lede {
+  font-family: var(--elm-font-display);
+  font-size: var(--elm-text-lg);
+  font-style: italic;
+  font-weight: 400;
+  line-height: var(--elm-leading-snug);
+  letter-spacing: var(--elm-track-normal);
+  color: var(--elm-ink-soft);
+  text-wrap: balance;
+  max-width: var(--elm-measure-text);
+}
+
+.elm-body {
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-md);
+  font-weight: 400;
+  line-height: var(--elm-leading-normal);
+  color: var(--elm-ink-soft);
+  max-width: var(--elm-measure-text);
+}
+
+.elm-caption {
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-xs);
+  line-height: var(--elm-leading-snug);
+  color: var(--elm-ink-faint);
+}
+
+.elm-tnum {
+  font-variant-numeric: tabular-nums;
+}

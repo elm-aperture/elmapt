@@ -1,0 +1,246 @@
+/* lightbox — one instance per page, holding one photograph. */
+
+.elm-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--elm-z-overlay);
+
+  width: 100vw;
+  max-width: 100vw;
+  height: 100svh;
+  max-height: 100svh;
+
+  border: 0;
+  margin: 0;
+  color: var(--elm-ink);
+
+  place-items: center;
+  padding: clamp(8px, 2vw, 32px);
+
+  overscroll-behavior: contain;
+  touch-action: none;
+
+  background:
+    radial-gradient(
+      120% 120% at 50% 50%,
+      rgba(241, 243, 247, 0.04),
+      transparent 55%
+    ),
+    rgba(2, 4, 7, 0.86);
+
+  opacity: 0;
+  transition: opacity var(--elm-dur-2) var(--elm-ease);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .elm-lightbox {
+    backdrop-filter: blur(18px) saturate(120%);
+    -webkit-backdrop-filter: blur(18px) saturate(120%);
+  }
+}
+
+.elm-lightbox[open] {
+  display: grid;
+}
+
+.elm-lightbox.is-in {
+  opacity: 1;
+}
+
+/* The scrim is painted by the element itself, so the UA backdrop stays out
+   of the way. */
+.elm-lightbox::backdrop {
+  background: rgba(2, 4, 7, 0.6);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .elm-lightbox::backdrop {
+    backdrop-filter: blur(6px);
+  }
+}
+
+/* Sized from the viewport rather than from its contents: a percentage box
+   around an image that is itself a percentage of that box has no solution,
+   and the browser resolves the cycle by making both small. */
+.elm-lightbox__figure {
+  --lb-pad: clamp(16px, 4vw, 64px);
+
+  position: relative;
+  width: min(100%, calc((100svh - var(--lb-pad)) * var(--lb-ratio, 1.5)));
+  aspect-ratio: var(--lb-ratio, 1.5);
+  margin: 0;
+  overflow: hidden;
+  border-radius: var(--elm-radius-md);
+  box-shadow: var(--elm-shadow-lift);
+
+  transform: scale(0.965);
+  transition: transform var(--elm-dur-3) var(--elm-ease);
+}
+
+.elm-lightbox.is-in .elm-lightbox__figure {
+  transform: none;
+}
+
+.elm-lightbox__img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The thumbnail is already decoded and on screen when the tile is clicked, so
+   it stands in at full size from the first frame and the full-resolution file
+   cross-fades over it whenever it lands. Nothing waits on the network. */
+/* Carries the intrinsic box of the master file, so it lays out at the right
+   size from the first frame and the panel never resizes under the reader. */
+.elm-lightbox__img--proxy {
+  filter: blur(8px);
+  transform: scale(1.04);
+}
+
+.elm-lightbox__img--full {
+  opacity: 0;
+  transition: opacity var(--elm-dur-3) var(--elm-ease);
+}
+
+.elm-lightbox__img--full.is-loaded {
+  opacity: 1;
+}
+
+.elm-lightbox__caption {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(12px, 2vw, 22px);
+  transform: translateX(-50%);
+
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  max-width: min(88vw, 720px);
+  padding: var(--elm-space-2) var(--elm-space-4);
+
+  border: 1px solid var(--elm-glass-edge);
+  border-radius: var(--elm-radius-pill);
+  /* sits over the photograph, which is as likely to be a white-tiled lobby
+     as a night exterior, so it carries more of its own ground than the
+     chrome elsewhere does */
+  background-color: rgba(4, 6, 10, 0.66);
+
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-xs);
+  line-height: 1.3;
+  letter-spacing: 0.04em;
+  text-align: center;
+  color: var(--elm-ink);
+}
+
+.elm-lightbox__by {
+  color: var(--elm-ink-dim);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .elm-lightbox__caption {
+    backdrop-filter: blur(16px) saturate(var(--elm-glass-saturate));
+    -webkit-backdrop-filter: blur(16px) saturate(var(--elm-glass-saturate));
+  }
+}
+
+.elm-lightbox__controls {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+.elm-lightbox__control {
+  position: absolute;
+  pointer-events: auto;
+
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+
+  border: 1px solid var(--elm-glass-edge);
+  border-radius: var(--elm-radius-md);
+  background-color: var(--elm-glass-tint);
+  color: var(--elm-ink-soft);
+
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+
+  transition:
+    background-color var(--elm-dur-1) var(--elm-ease),
+    border-color var(--elm-dur-1) var(--elm-ease),
+    color var(--elm-dur-1) var(--elm-ease);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .elm-lightbox__control {
+    backdrop-filter: blur(16px) saturate(var(--elm-glass-saturate));
+    -webkit-backdrop-filter: blur(16px) saturate(var(--elm-glass-saturate));
+  }
+}
+
+.elm-lightbox__control:hover {
+  background-color: rgba(241, 243, 247, 0.09);
+  border-color: var(--elm-glass-rim);
+  color: var(--elm-ink);
+}
+
+.elm-lightbox__control--close {
+  top: calc(12px + env(safe-area-inset-top));
+  right: calc(12px + env(safe-area-inset-right));
+}
+
+.elm-lightbox__control--prev,
+.elm-lightbox__control--next {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.elm-lightbox__control--prev {
+  left: calc(12px + env(safe-area-inset-left));
+}
+
+.elm-lightbox__control--next {
+  right: calc(12px + env(safe-area-inset-right));
+}
+
+/* On a phone the frame wants the whole width; arrows are replaced by swipe. */
+@media (max-width: 700px) {
+  .elm-lightbox__control--prev,
+  .elm-lightbox__control--next {
+    display: none;
+  }
+}
+
+.elm-lightbox__count {
+  position: absolute;
+  bottom: calc(12px + env(safe-area-inset-bottom));
+  right: calc(12px + env(safe-area-inset-right));
+  pointer-events: none;
+
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-xs);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--elm-track-wide);
+  color: var(--elm-ink-faint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .elm-lightbox,
+  .elm-lightbox__figure,
+  .elm-lightbox__img--full {
+    transition: none;
+  }
+
+  .elm-lightbox__figure {
+    transform: none;
+  }
+}

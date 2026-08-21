@@ -1,0 +1,41 @@
+/* ambient — the slow radial field the whole family sits on.
+ *
+ * Rendered as an explicit element rather than body::before so an app can
+ * place it, omit it, or run two of them. Positions are custom properties so
+ * JS can drift them without touching the paint description. */
+
+.elm-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: var(--elm-z-ambient);
+  pointer-events: none;
+  background-color: var(--elm-bg);
+  background-image:
+    radial-gradient(
+      min(900px, 92vw) min(700px, 62svh) at var(--elm-p1x) var(--elm-p1y),
+      rgba(var(--elm-amb-1) / var(--elm-amb-1a)) 0%,
+      rgba(var(--elm-amb-1) / 0) 62%
+    ),
+    radial-gradient(
+      min(1200px, 115vw) min(900px, 78svh) at var(--elm-p2x) var(--elm-p2y),
+      rgba(var(--elm-amb-2) / var(--elm-amb-2a)) 0%,
+      rgba(var(--elm-amb-2) / 0) 64%
+    ),
+    radial-gradient(
+      min(1000px, 100vw) min(800px, 70svh) at var(--elm-p3x) var(--elm-p3y),
+      rgba(var(--elm-amb-3) / var(--elm-amb-3a)) 0%,
+      rgba(var(--elm-amb-3) / 0) 58%
+    );
+}
+
+/* corner fall-off. Keeps photographs from bleeding into the browser chrome. */
+.elm-ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    132% 132% at 50% 42%,
+    transparent 56%,
+    rgba(0, 0, 0, 0.42) 100%
+  );
+}

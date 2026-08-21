@@ -1,0 +1,27 @@
+/* Elm Aperture — app shell.
+ *
+ * App-local composition only. Anything visual that another Elm Aperture app
+ * would also want belongs in @elmapt/theme, not here. */
+
+:root {
+  /* Deliberate deviation from the shared theme: this app is mostly full-bleed
+   * photography, so the ambient field runs at roughly two thirds of the
+   * default weight. The photographs set the colour of this site; the field
+   * only keeps the page from reading as flat black around them. */
+  --elm-amb-1a: 0.07;
+  --elm-amb-2a: 0.05;
+  --elm-amb-3a: 0.035;
+}
+
+.page__main {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: calc(clamp(76px, 10vw, 148px) + env(safe-area-inset-bottom));
+}
+
+@supports (scrollbar-width: thin) {
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(241, 243, 247, 0.16) transparent;
+  }
+}

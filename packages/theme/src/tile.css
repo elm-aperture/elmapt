@@ -1,0 +1,161 @@
+/* mosaic + tile — the two primitives every gallery in this family is built
+ * from. A mosaic is a fixed-column grid whose row height is derived from the
+ * column width and the photographs' aspect ratio, so a 1x1 cell matches the
+ * source frame exactly and nothing is cropped to fit the layout.
+ *
+ * Row height needs the grid's own inline size, and an element cannot be its
+ * own query container, so the frame supplies the container and the grid reads
+ * it back in cqw. */
+
+.elm-mosaic-frame {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.elm-mosaic {
+  --elm-mosaic-cols: 3;
+  --elm-mosaic-gap: clamp(4px, 0.6vw, 10px);
+  --elm-mosaic-ratio: 1.5;
+
+  display: grid;
+  grid-template-columns: repeat(var(--elm-mosaic-cols), minmax(0, 1fr));
+  grid-auto-rows: calc(
+    (100cqw - (var(--elm-mosaic-cols) - 1) * var(--elm-mosaic-gap)) /
+      var(--elm-mosaic-cols) / var(--elm-mosaic-ratio)
+  );
+  grid-auto-flow: row dense;
+  gap: var(--elm-mosaic-gap);
+}
+
+/* Without container queries the derived row height is unavailable; square
+   rows keep the grid intact and the tiles crop rather than collapse. */
+@supports not (container-type: inline-size) {
+  .elm-mosaic {
+    grid-auto-rows: auto;
+  }
+
+  .elm-tile {
+    aspect-ratio: var(--elm-mosaic-ratio);
+  }
+}
+
+.elm-tile {
+  position: relative;
+  overflow: hidden;
+  min-width: 0;
+  border-radius: var(--elm-radius-sm);
+  background-color: rgba(241, 243, 247, 0.035);
+  border: 0;
+  padding: 0;
+  cursor: zoom-in;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* a tile that navigates rather than opening the frame in place */
+.elm-tile--link {
+  cursor: pointer;
+}
+
+/* A cell the grid needs and the set has not filled. Rendered rather than
+   left blank: a hole reads as a layout that broke, a named open slot reads
+   as work still to be shot — which is what it is. */
+.elm-tile--open {
+  display: grid;
+  place-items: center;
+  cursor: default;
+  border: 1px solid var(--elm-line-soft);
+  background-color: rgba(241, 243, 247, 0.02);
+}
+
+.elm-tile__open {
+  padding: 0 var(--elm-space-2);
+
+  font-family: var(--elm-font-sans);
+  /* smaller and tighter than an eyebrow: at three columns on a phone the
+     cell is barely a hundred pixels across */
+  font-size: clamp(7px, 1.5vw, 10px);
+  line-height: 1.3;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-align: center;
+  text-wrap: balance;
+  color: var(--elm-ink-faint);
+}
+
+.elm-tile__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transform: scale(1.001);
+  transition:
+    opacity var(--elm-dur-3) var(--elm-ease),
+    transform var(--elm-dur-3) var(--elm-ease);
+}
+
+.elm-tile__img.is-loaded {
+  opacity: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .elm-tile:hover .elm-tile__img {
+    transform: scale(1.028);
+  }
+
+  .elm-tile:hover .elm-tile__plate,
+  .elm-tile:focus-visible .elm-tile__plate {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.elm-tile__plate {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  padding: 2.4em var(--elm-space-3) var(--elm-space-3);
+  text-align: left;
+  pointer-events: none;
+
+  background: linear-gradient(
+    to top,
+    rgba(4, 6, 10, 0.72) 0%,
+    rgba(4, 6, 10, 0.32) 45%,
+    rgba(4, 6, 10, 0) 100%
+  );
+
+  opacity: 0;
+  transform: translate3d(0, 6px, 0);
+  transition:
+    opacity var(--elm-dur-2) var(--elm-ease),
+    transform var(--elm-dur-2) var(--elm-ease);
+}
+
+.elm-tile__title {
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-xs);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: var(--elm-track-wide);
+  text-transform: uppercase;
+  color: var(--elm-ink);
+}
+
+.elm-tile__where {
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-xs);
+  line-height: 1.2;
+  color: var(--elm-ink-dim);
+}
+
+/* Case-study grids run to several hundred frames. Skipping the render work
+   for tiles that are nowhere near the viewport is most of the win, and unlike
+   virtualisation it leaves find-in-page, scroll anchoring and deep links
+   working. */
+.elm-tile--deferred {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 220px;
+}

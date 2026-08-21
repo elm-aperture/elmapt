@@ -1,0 +1,54 @@
+/* surface — the acrylic language.
+ *
+ * This is the house material: a tinted pane, a bright top rim, a hairline
+ * edge, and depth from shadow rather than from stroke weight. It belongs on
+ * chrome — nav, controls, containers — and deliberately not on photographs. */
+
+.elm-surface {
+  position: relative;
+  background-color: var(--elm-glass-tint);
+  border: 1px solid var(--elm-glass-edge);
+  border-radius: var(--elm-radius-lg);
+  box-shadow: var(--elm-shadow-glass);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .elm-surface {
+    backdrop-filter: blur(var(--elm-glass-blur))
+      saturate(var(--elm-glass-saturate));
+    -webkit-backdrop-filter: blur(var(--elm-glass-blur))
+      saturate(var(--elm-glass-saturate));
+  }
+}
+
+/* opaque fallback where the pane sits over scrolling content and blur is
+   unavailable — a translucent bar with no blur is just a smear */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .elm-surface {
+    background-color: var(--elm-glass-tint-solid);
+  }
+}
+
+.elm-surface--flush {
+  border-radius: 0;
+  border-inline: 0;
+}
+
+.elm-surface--quiet {
+  --elm-glass-tint: rgba(9, 12, 18, 0.28);
+  box-shadow: inset 0 1px 0 rgba(241, 243, 247, 0.08);
+}
+
+/* a bare hairline divider that fades at both ends */
+.elm-rule {
+  flex: 1 1 auto;
+  height: 1px;
+  min-width: 24px;
+  border: 0;
+  background: linear-gradient(
+    to right,
+    rgba(241, 243, 247, 0),
+    var(--elm-line),
+    rgba(241, 243, 247, 0)
+  );
+}

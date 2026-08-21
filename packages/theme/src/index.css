@@ -1,0 +1,21 @@
+/* @elmapt/theme
+ *
+ * The shared visual source of truth for every Elm Aperture surface.
+ * Import order matters: tokens define the vocabulary, reset normalises,
+ * everything after that is written in terms of the tokens only.
+ *
+ * Apps are expected to deviate on top of this file on purpose — override a
+ * token, or write app-local CSS in terms of these tokens. Apps should not
+ * redeclare raw colours, easings or radii.
+ */
+
+@import "./tokens.css";
+@import "./reset.css";
+@import "./typography.css";
+@import "./ambient.css";
+@import "./surface.css";
+@import "./controls.css";
+@import "./layout.css";
+@import "./motion.css";
+@import "./tile.css";
+@import "./lightbox.css";

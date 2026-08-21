@@ -1,0 +1,15 @@
+{
+  "name": "elmapt-monorepo",
+  "version": "1.0.0",
+  "description": "Elm Aperture — monorepo for elmapt.com and its apps.",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.22.0",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.3.0",
+      "onFail": "download"
+    }
+  }
+}

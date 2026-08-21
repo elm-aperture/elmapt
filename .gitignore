@@ -1,0 +1,25 @@
+node_modules
+dist
+dist-ssr
+*.local
+
+.env
+.env.local
+.env.*.local
+
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+.firebase/
+
+# staged deploy media — rebuilt by media/refresh.sh
+media/img/
+apps/elmapt/public/res

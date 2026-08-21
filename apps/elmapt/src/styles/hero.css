@@ -1,0 +1,66 @@
+.hero {
+  display: block;
+}
+
+.hero__frame {
+  --hero-ratio: 4 / 5;
+  --hero-backdrop: var(--elm-bg-raised);
+
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--hero-ratio);
+  margin-inline: auto;
+  overflow: hidden;
+  background-color: var(--hero-backdrop);
+}
+
+@media (min-width: 640px) {
+  .hero__frame {
+    --hero-ratio: 3 / 2;
+  }
+}
+
+@media (min-width: 1800px) {
+  .hero__frame {
+    width: min(100%, calc(96vh * 3 / 2));
+    width: min(100%, calc(96svh * 3 / 2));
+  }
+}
+
+.hero__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* the subject sits a hair left of centre */
+  object-position: 47% 50%;
+
+  opacity: 0;
+  transform: scale(1.012);
+  transition:
+    opacity var(--elm-dur-4) var(--elm-ease),
+    transform 1100ms var(--elm-ease);
+}
+
+.hero__img.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+.hero__caption {
+  display: flex;
+  justify-content: center;
+  padding-top: clamp(26px, 4.5vw, 52px);
+}
+
+.hero__lede {
+  text-align: center;
+  text-wrap: balance;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__img {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -1,0 +1,73 @@
+/* The floating booking control.
+ *
+ * Fixed to the bottom-right corner, over everything except the viewer. Sits
+ * on the same acrylic as the rest of the chrome, with a real shadow so it
+ * reads as riding above the page rather than printed on it. */
+
+.dock {
+  position: fixed;
+  right: calc(clamp(14px, 2.2vw, 28px) + env(safe-area-inset-right));
+  bottom: calc(clamp(14px, 2.2vw, 28px) + env(safe-area-inset-bottom));
+  z-index: var(--elm-z-chrome);
+
+  transition:
+    opacity var(--elm-dur-2) var(--elm-ease),
+    transform var(--elm-dur-2) var(--elm-ease);
+}
+
+.dock.is-hidden {
+  /* the entrance animation would otherwise outrank this: an animation's
+     computed values sit above normal declarations in the cascade */
+  animation: none;
+  opacity: 0;
+  transform: translate3d(0, 10px, 0) scale(0.96);
+  pointer-events: none;
+}
+
+.dock__btn {
+  border-radius: var(--elm-radius-pill);
+  padding: var(--elm-space-4) var(--elm-space-6);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+
+  /* Unlike the rest of the chrome, this one is always over content — most of
+     it photographs, and as often a white-tiled lobby as a night exterior. It
+     carries its own ground rather than borrowing the page's. */
+  background-color: rgba(6, 9, 14, 0.66);
+  border-color: rgba(241, 243, 247, 0.16);
+  color: var(--elm-ink-soft);
+}
+
+.dock__btn:hover {
+  background-color: rgba(6, 9, 14, 0.82);
+  border-color: var(--elm-glass-rim);
+  color: var(--elm-ink);
+}
+
+/* Arrives after the page has settled, so it reads as chrome coming to rest
+   rather than as part of the layout loading. */
+@media (prefers-reduced-motion: no-preference) {
+  .dock {
+    /* backwards, not both: once it has landed the element goes back to
+       obeying its own rules, so standing it down still works */
+    animation: dock-settle var(--elm-dur-4) var(--elm-ease) 260ms backwards;
+  }
+}
+
+@keyframes dock-settle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* On a narrow screen the label is the only thing that has to fit. */
+@media (max-width: 420px) {
+  .dock__btn {
+    padding: var(--elm-space-3) var(--elm-space-5);
+    letter-spacing: var(--elm-track-wide);
+  }
+}
