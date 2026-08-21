@@ -12,10 +12,23 @@ import react from "@vitejs/plugin-react";
  * different tooling. This build never touches them.
  *
  * Dev reads them through apps/elmapt/public/res, the symlink into the old
- * repo, so a checkout works with no configuration at all. A production build
- * requires VITE_RES_BASE and refuses to run without it. */
+ * repo, so a checkout works with no configuration at all. A build points at
+ * the image host below. */
 
 const DEV_MEDIA = "/res/img";
+
+/* The image host, committed rather than configured.
+ *
+ * This URL is the origin of every <img src> on the site — it is in the page
+ * source every visitor receives. It is not a secret and cannot become one, so
+ * an environment variable is the wrong shape for it: Netlify fails any build
+ * in which a declared variable's value turns up in the output, and this one
+ * necessarily does. Nothing to declare, nothing to scan.
+ *
+ * VITE_RES_BASE still overrides it, for pointing a local build somewhere
+ * else. Do not set it in Netlify — that is the thing that trips the scanner. */
+
+const MEDIA_HOST = "https://elmapt.web.app";
 
 const isRemote = (base: string) => /^https?:\/\//.test(base);
 
@@ -69,19 +82,20 @@ function publicAssets(): Plugin {
 
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "VITE_");
-  const configured = env.VITE_RES_BASE?.trim();
+  const override = env.VITE_RES_BASE?.trim();
 
-  /* Failing here is the point. A build that quietly produced a photography
-     site with no photographs in it would look fine until it was deployed. */
-  if (command === "build" && !isRemote(configured ?? "")) {
+  const media =
+    command === "build" ? override || MEDIA_HOST : override || DEV_MEDIA;
+
+  /* A build serving photographs from a relative path would be one that had
+     bundled them, which this one never does. */
+  if (command === "build" && !isRemote(media)) {
     throw new Error(
-      "VITE_RES_BASE must be set to the media host for a build — an absolute " +
-        "URL with no trailing slash, e.g. https://elmapt-media.web.app. " +
-        "The photographs are not part of this bundle; see DEPLOY.md.",
+      `Media base "${media}" is not an absolute URL. A build serves the ` +
+        "photographs from the image host; the bundle does not carry them. " +
+        "Unset VITE_RES_BASE to use the committed default. See DEPLOY.md.",
     );
   }
-
-  const media = configured || DEV_MEDIA;
 
   return {
     plugins: [react(), mediaHtml(media), publicAssets()],

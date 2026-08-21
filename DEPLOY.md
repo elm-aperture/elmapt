@@ -50,36 +50,43 @@ it. Photograph deploys are always from here.
 the router needs, and cache headers. Netlify detects `pnpm-lock.yaml` and runs
 `pnpm install` at the repo root on its own.
 
-Connect the GitHub repo, then set one environment variable — Site
-configuration → Environment variables, or uncomment the line in
-`netlify.toml`:
+Connect the GitHub repo. That is all — **there is no environment variable to
+set.**
 
+The image host lives as a committed constant, `MEDIA_HOST`, at the top of
+`apps/elmapt/vite.config.ts`:
+
+```ts
+const MEDIA_HOST = "https://elmapt.web.app";
 ```
-VITE_RES_BASE = https://elmapt.web.app
-```
 
-That is the entire integration between the two. Every frame URL, the hero
-preload in `index.html`, and the coverage map are built from it, and the build
-emits a `preconnect` to that origin so the connection to the image host is
-open before the hero needs it.
+Every frame URL, the hero preload in `index.html`, and the coverage map are
+built from it, and the build emits a `preconnect` to that origin so the
+connection to the image host is open before the hero needs it. Moving the
+photographs somewhere else is one line and a push.
 
-A build without it **fails**, with a message saying so. Deliberate: a
-photography site that deployed with no photographs would look fine right up
-until someone opened it.
+It is committed rather than configured on purpose. That URL is the origin of
+every `<img src>` the site serves — it is in the page source every visitor
+receives, so it is not a secret and cannot become one. Netlify fails any build
+in which a declared environment variable's value turns up in the output, which
+this one necessarily would. Nothing declared, nothing to scan.
+
+`VITE_RES_BASE` still overrides it for a local build. Do not set it in
+Netlify; that is the thing that trips the scanner.
 
 `elmapt.com` stays pointed wherever it is now until you move it. Deploy
 previews and the `*.netlify.app` URL let you look at this without touching the
 live site.
 
-## Local production builds
+## Local builds
 
 ```sh
-cp apps/elmapt/.env.example apps/elmapt/.env.local   # set VITE_RES_BASE
-pnpm --filter elmapt build
+pnpm --filter elmapt build     # uses MEDIA_HOST, same as Netlify would
+pnpm --filter elmapt dev       # falls back to the public/res symlink
 ```
 
-`pnpm --filter elmapt dev` needs none of that — it falls back to the
-`public/res` symlink.
+Neither needs configuring. To aim a local build at some other host, copy
+`apps/elmapt/.env.example` to `.env.local` and set `VITE_RES_BASE`.
 
 ## The budget
 
