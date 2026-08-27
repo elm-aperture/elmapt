@@ -29,7 +29,7 @@ const DEV_MEDIA = "/res/img";
  * bound to it. Until then, use its own address instead:
  *   const MEDIA_HOST = "https://elmapt-media.pages.dev";
  *
- * VITE_RES_BASE overrides it for a local build. Do not set it in CI. */
+ * VITE_IMG_BASE overrides it for a local build. Do not set it in CI. */
 
 const MEDIA_HOST = "https://img.elmapt.com";
 
@@ -85,7 +85,7 @@ function publicAssets(): Plugin {
 
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "VITE_");
-  const override = env.VITE_RES_BASE?.trim();
+  const override = env.VITE_IMG_BASE?.trim();
 
   const media =
     command === "build" ? override || MEDIA_HOST : override || DEV_MEDIA;
@@ -96,7 +96,7 @@ export default defineConfig(({ command, mode }) => {
     throw new Error(
       `Media base "${media}" is not an absolute URL. A build serves the ` +
         "photographs from the image host; the bundle does not carry them. " +
-        "Unset VITE_RES_BASE to use the committed default. See DEPLOY.md.",
+        "Unset VITE_IMG_BASE to use the committed default. See DEPLOY.md.",
     );
   }
 

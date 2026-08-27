@@ -11,12 +11,12 @@ import type { Gallery, Rung } from "./types";
  * when this read an environment variable instead and quietly fell back to a
  * relative path. */
 
-export const RES_BASE = __MEDIA_BASE__;
+export const IMG_BASE = __MEDIA_BASE__;
 
 /* For the handful of images that are not gallery frames: the hero, the
  * coverage map. Same base, same guarantee. */
 export function resUrl(path: string): string {
-  return `${RES_BASE}/${path}`;
+  return `${IMG_BASE}/${path}`;
 }
 
 const THUMB: Rung = { w: 500, dir: "thumb", suffix: "_thumb" };
@@ -28,7 +28,7 @@ export function frameName(gallery: Gallery, frame: number): string {
 }
 
 export function sourceAt(gallery: Gallery, frame: number, rung: Rung): string {
-  return `${RES_BASE}/${gallery.dir}/${gallery.slug}/${rung.dir}/${frameName(gallery, frame)}${rung.suffix}.webp`;
+  return `${IMG_BASE}/${gallery.dir}/${gallery.slug}/${rung.dir}/${frameName(gallery, frame)}${rung.suffix}.webp`;
 }
 
 export function thumbSrc(gallery: Gallery, frame: number): string {
