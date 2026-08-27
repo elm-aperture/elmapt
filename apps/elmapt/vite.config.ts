@@ -21,14 +21,17 @@ const DEV_MEDIA = "/res/img";
  *
  * This URL is the origin of every <img src> on the site — it is in the page
  * source every visitor receives. It is not a secret and cannot become one, so
- * an environment variable is the wrong shape for it: Netlify fails any build
- * in which a declared variable's value turns up in the output, and this one
- * necessarily does. Nothing to declare, nothing to scan.
+ * an environment variable is the wrong shape for it. It also stops any host's
+ * secret scanner failing the build over a value that necessarily appears in
+ * the output.
  *
- * VITE_RES_BASE still overrides it, for pointing a local build somewhere
- * else. Do not set it in Netlify — that is the thing that trips the scanner. */
+ * Before the first build, the media Pages project needs this custom domain
+ * bound to it. Until then, use its own address instead:
+ *   const MEDIA_HOST = "https://elmapt-media.pages.dev";
+ *
+ * VITE_RES_BASE overrides it for a local build. Do not set it in CI. */
 
-const MEDIA_HOST = "https://elmapt.web.app";
+const MEDIA_HOST = "https://img.elmapt.com";
 
 const isRemote = (base: string) => /^https?:\/\//.test(base);
 
