@@ -1,0 +1,52 @@
+/* A closing mark, not a nav row — no band, no border, no background. Just
+   one quiet way out to where the work lives elsewhere. */
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--elm-space-3);
+  padding-block: var(--elm-rhythm) clamp(28px, 5vw, 56px);
+  color: var(--elm-ink-faint);
+}
+
+.footer__icons {
+  display: flex;
+  align-items: center;
+  gap: var(--elm-space-4);
+}
+
+.footer__icon {
+  color: inherit;
+  transition: color var(--elm-dur-2) var(--elm-ease);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.footer__icon:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.footer__icon:hover {
+  color: var(--elm-ink);
+}
+
+.footer__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* The homepage never scrolls, so there is no "after the content" for this to
+   sit in — it has to be pinned to the bottom of the one screen instead.
+   Footer renders as a root-level sibling of .elm-page (same as BookingDock),
+   so there's no positioned ancestor to anchor an absolute box to — this has
+   to be fixed against the viewport instead. */
+.footer--floating {
+  position: fixed;
+  left: 50%;
+  bottom: calc(clamp(14px, 2.2vw, 28px) + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  padding-block: 0;
+  z-index: var(--elm-z-chrome);
+}

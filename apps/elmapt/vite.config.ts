@@ -25,13 +25,18 @@ const DEV_MEDIA = "/res/img";
  * secret scanner failing the build over a value that necessarily appears in
  * the output.
  *
+ * The trailing /img is load-bearing, not decoration: img.elmapt.com serves
+ * more than one kind of asset off separate path prefixes, /img is only the
+ * one that exists today, and a future /video (or similar) sits beside it
+ * rather than under it.
+ *
  * Before the first build, the media Pages project needs this custom domain
  * bound to it. Until then, use its own address instead:
- *   const MEDIA_HOST = "https://elmapt-media.pages.dev";
+ *   const MEDIA_HOST = "https://elmapt-media.pages.dev/img";
  *
  * VITE_IMG_BASE overrides it for a local build. Do not set it in CI. */
 
-const MEDIA_HOST = "https://img.elmapt.com";
+const MEDIA_HOST = "https://img.elmapt.com/img";
 
 const isRemote = (base: string) => /^https?:\/\//.test(base);
 

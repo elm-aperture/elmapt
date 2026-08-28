@@ -36,10 +36,6 @@ export function Hero() {
           onLoad={() => setLoaded(true)}
         />
       </div>
-
-      <div className="hero__caption elm-container">
-        <p className="hero__lede elm-lede">{site.tagline}</p>
-      </div>
     </section>
   );
 }

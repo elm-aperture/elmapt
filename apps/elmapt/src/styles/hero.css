@@ -1,30 +1,22 @@
+/* Hero — the photograph and nothing else.
+ *
+ * Fills exactly what the nav leaves behind, so the homepage is one screen
+ * and never scrolls. No fixed aspect ratio to defend — object-fit crops
+ * whatever the remaining space turns out to be, on any device. */
+
 .hero {
-  display: block;
+  flex: 1;
+  min-height: 0;
 }
 
 .hero__frame {
-  --hero-ratio: 4 / 5;
   --hero-backdrop: var(--elm-bg-raised);
 
   position: relative;
   width: 100%;
-  aspect-ratio: var(--hero-ratio);
-  margin-inline: auto;
+  height: 100%;
   overflow: hidden;
   background-color: var(--hero-backdrop);
-}
-
-@media (min-width: 640px) {
-  .hero__frame {
-    --hero-ratio: 3 / 2;
-  }
-}
-
-@media (min-width: 1800px) {
-  .hero__frame {
-    width: min(100%, calc(96vh * 3 / 2));
-    width: min(100%, calc(96svh * 3 / 2));
-  }
 }
 
 .hero__img {
@@ -44,17 +36,6 @@
 .hero__img.is-in {
   opacity: 1;
   transform: none;
-}
-
-.hero__caption {
-  display: flex;
-  justify-content: center;
-  padding-top: clamp(26px, 4.5vw, 52px);
-}
-
-.hero__lede {
-  text-align: center;
-  text-wrap: balance;
 }
 
 @media (prefers-reduced-motion: reduce) {

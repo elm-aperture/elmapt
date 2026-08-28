@@ -9,7 +9,7 @@ export function TopNav() {
   return (
     <header className="nav elm-surface elm-surface--flush">
       <div className="nav__inner elm-container elm-container--wide">
-        <a className="nav__mark elm-wordmark" href="/">
+        <a className="nav__mark elm-wordmark" href="/" draggable={false}>
           {site.name}
         </a>
 
@@ -24,6 +24,7 @@ export function TopNav() {
                 className="elm-navlink"
                 href={href}
                 aria-current={current ? "page" : undefined}
+                draggable={false}
               >
                 {category.label}
               </a>

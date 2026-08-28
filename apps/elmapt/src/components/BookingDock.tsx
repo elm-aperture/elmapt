@@ -7,10 +7,23 @@ export function BookingDock({ hidden = false }: { hidden?: boolean }) {
       <a
         className="dock__btn elm-btn"
         href={site.booking.href}
+        aria-label={site.booking.label}
         tabIndex={hidden ? -1 : undefined}
         aria-hidden={hidden ? true : undefined}
       >
-        {site.booking.label}
+        <svg
+          className="dock__icon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="3" y="5" width="18" height="14" rx="2" />
+          <path d="M3 7l9 6 9-6" />
+        </svg>
       </a>
     </div>
   );

@@ -8,7 +8,6 @@ import { resUrl } from "../gallery/sources";
 
 export const site = {
   name: "Elm Aperture",
-  tagline: "Photo & Video services in Dallas - Fort Worth",
 
   hero: {
     /* Dimensions are declared so the frame reserves its box before the file
@@ -20,13 +19,17 @@ export const site = {
     backdrop: "#0f1105",
   },
 
-  instagram: {
-    eyebrow: "Elm Aperture on Instagram",
-    feedId: "yh5fXOj29q5dsG731Dtb",
-  },
-
   booking: {
     label: "Book a shoot",
     href: "/booking",
+  },
+
+  instagram: {
+    href: "https://instagram.com/elm_aperture",
+  },
+
+  /* No channel yet — placeholder href until there's somewhere to send it. */
+  youtube: {
+    href: "#",
   },
 } as const;

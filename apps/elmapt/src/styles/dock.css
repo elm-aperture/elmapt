@@ -26,7 +26,9 @@
 
 .dock__btn {
   border-radius: var(--elm-radius-pill);
-  padding: var(--elm-space-4) var(--elm-space-6);
+  /* equal on every side, on purpose: an icon-only button reads as a circle,
+     not a squashed pill */
+  padding: var(--elm-space-4);
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
 
   /* Unlike the rest of the chrome, this one is always over content — most of
@@ -41,6 +43,12 @@
   background-color: rgba(6, 9, 14, 0.82);
   border-color: var(--elm-glass-rim);
   color: var(--elm-ink);
+}
+
+.dock__icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
 }
 
 /* Arrives after the page has settled, so it reads as chrome coming to rest
@@ -61,13 +69,5 @@
   to {
     opacity: 1;
     transform: none;
-  }
-}
-
-/* On a narrow screen the label is the only thing that has to fit. */
-@media (max-width: 420px) {
-  .dock__btn {
-    padding: var(--elm-space-3) var(--elm-space-5);
-    letter-spacing: var(--elm-track-wide);
   }
 }

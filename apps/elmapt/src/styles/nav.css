@@ -16,6 +16,22 @@
   padding-top: calc(var(--elm-space-3) + env(safe-area-inset-top));
 }
 
+/* Kills the mobile blue tap-flash, the mouse-click focus ring, and the blue
+   text-selection box a click-drag across the nav would otherwise paint;
+   keyboard focus (:focus-visible) is left untouched so tabbing through the
+   nav still shows a ring. */
+.nav__mark,
+.elm-navlink {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.nav__mark:focus:not(:focus-visible),
+.elm-navlink:focus:not(:focus-visible) {
+  outline: none;
+}
+
 .nav__mark {
   flex: 0 0 auto;
   color: var(--elm-ink-soft);

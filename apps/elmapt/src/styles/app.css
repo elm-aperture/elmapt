@@ -19,6 +19,15 @@
   padding-bottom: calc(clamp(76px, 10vw, 148px) + env(safe-area-inset-bottom));
 }
 
+/* The homepage is one screen, not a scroll — the hero fills whatever the nav
+   leaves behind exactly, so there's no page under it to protect from the
+   dock. Reserving space for it here would just leave a gap under the photo. */
+.page__main--home {
+  flex: 1;
+  min-height: 0;
+  padding-bottom: 0;
+}
+
 @supports (scrollbar-width: thin) {
   html {
     scrollbar-width: thin;
