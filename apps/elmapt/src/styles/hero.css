@@ -2,46 +2,152 @@
  *
  * Fills exactly what the nav leaves behind, so the homepage is one screen
  * and never scrolls. No fixed aspect ratio to defend — object-fit crops
- * whatever the remaining space turns out to be, on any device. */
+ * whatever the remaining space turns out to be, on any device.
+ *
+ * Five photographs are stacked in that box and dissolve through one another
+ * on a slow clock. The clock is hooks/useCarousel.ts; everything about how
+ * the handover looks is here. */
 
+/* One element, not a frame inside a section. A wrapper here would have to
+   claim its height as a percentage of a flex item, which does not resolve —
+   the frames are positioned against this box's used height instead, and
+   inset works whether or not a percentage would have. */
 .hero {
-  flex: 1;
-  min-height: 0;
-}
-
-.hero__frame {
   --hero-backdrop: var(--elm-bg-raised);
 
+  /* Faster than Opus's original 2400ms, but 720ms (the theme's own top
+   * duration, --elm-dur-4) read as a hard cut rather than a dissolve for
+   * something this large — split the difference. Must stay well under
+   * HOLD in useCarousel.ts. */
+  --hero-dissolve: 1400ms;
+  --hero-settle: 650ms;
+  /* The very first frame is arriving out of a flat backdrop, not off
+   * another photograph — there is nothing under it worth lingering over,
+   * so it gets a quicker, ordinary-page-load fade instead of the full
+   * crossfade duration. */
+  --hero-debut: var(--elm-dur-4);
+
+  flex: 1;
+  min-height: 0;
   position: relative;
-  width: 100%;
-  height: 100%;
   overflow: hidden;
   background-color: var(--hero-backdrop);
 }
 
 .hero__img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* the subject sits a hair left of centre */
-  object-position: 47% 50%;
+  /* Per frame — see site.ts. The box is a different shape on every device,
+     so each composition names the point that has to survive the crop. */
+  object-position: var(--hero-focus, 50% 50%);
 
   opacity: 0;
   transform: scale(1.012);
-  transition:
-    opacity var(--elm-dur-4) var(--elm-ease),
-    transform 1100ms var(--elm-ease);
+  /* Opacity animates from every state, not just the one arriving. A click
+     (or the auto-timer landing right after one) can reassign layers before
+     the previous handover finished, demoting a frame that was only, say,
+     40% faded in straight to --under or --out. Without a transition here
+     those states would snap it the rest of the way instantly; with one,
+     the fade just continues from wherever it actually was. */
+  transition: opacity var(--hero-dissolve) linear;
 }
 
-.hero__img.is-in {
+/* The frame arriving. It fades up over the one it replaces, which is still
+   at full strength underneath — a straight dissolve between two
+   photographs, never a dip to the backdrop between them. Only this state
+   also moves the transform: the settle-zoom is for something newly arriving
+   on top, not for a frame merely changing opacity underneath one. */
+.hero__img--in {
+  z-index: 2;
+  opacity: 1;
+  transform: none;
+  /* Linear, and the only place on the site that departs from --elm-ease.
+     That curve is 87% done at its own halfway point, which is right for a
+     control answering a tap and wrong for this: it would turn the dissolve
+     into a fast blend with a long invisible tail. Two opaque photographs
+     crossing want an even ramp — the transform keeps the house curve. */
+  transition:
+    opacity var(--hero-dissolve) linear,
+    transform var(--hero-settle) var(--elm-ease);
+}
+
+/* The first frame only: same arrival, shorter fade — see --hero-debut. */
+.hero__img--debut {
+  transition-duration: var(--hero-debut);
+}
+
+/* The frame being replaced. Holds, unmoved, until the new one is opaque —
+   inherits the base opacity transition so a frame interrupted mid-arrival
+   still eases up to full strength instead of popping there. */
+.hero__img--under {
+  z-index: 1;
   opacity: 1;
   transform: none;
 }
 
+/* Everything else. Ordinarily already at 0 by the time this class lands,
+   so the inherited transition costs nothing to watch; it only does real
+   work when a frame is demoted here before it finished fading in. */
+.hero__img--out {
+  z-index: 0;
+  opacity: 0;
+}
+
+/* Asked for stillness, the rotation never starts (useCarousel.ts declines to
+   schedule it) — so all this has to do is let the first frame appear. */
 @media (prefers-reduced-motion: reduce) {
   .hero__img {
-    opacity: 1;
     transform: none;
+    /* The base rule now carries an opacity transition (see .hero__img
+       above) so interrupted fades don't snap — but chevrons and the arrow
+       keys still work under reduced motion, and this is the one place that
+       has to stay a hard cut regardless. */
     transition: none;
   }
+}
+
+/* Chevrons — ghost buttons, not a control bar. They exist to make the
+ * sequence legible (there is a next, there is a previous), not to look like
+ * UI on top of a photograph. */
+.hero__nav {
+  z-index: 3;
+  top: 50%;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: 0 0;
+  color: var(--elm-ink-dim);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  position: absolute;
+  transform: translateY(-50%);
+  transition: color var(--elm-dur-2) var(--elm-ease);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.hero__nav:hover {
+  color: var(--elm-ink);
+}
+
+.hero__nav:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.hero__nav svg {
+  width: 22px;
+  height: 22px;
+}
+
+.hero__nav--prev {
+  left: calc(var(--elm-space-2) + env(safe-area-inset-left));
+}
+
+.hero__nav--next {
+  right: calc(var(--elm-space-2) + env(safe-area-inset-right));
 }

@@ -13,13 +13,13 @@
 
 .elm-wordmark {
   font-family: var(--elm-font-display);
-  font-size: var(--elm-text-sm);
+  font-size: var(--elm-text-md);
   font-weight: 400;
   line-height: 1;
   text-transform: uppercase;
-  letter-spacing: var(--elm-track-widest);
+  letter-spacing: var(--elm-track-wide);
   /* trailing tracking pushes the optical centre right; pull it back */
-  text-indent: var(--elm-track-widest);
+  text-indent: var(--elm-track-wide);
   color: var(--elm-ink);
   white-space: nowrap;
 }

@@ -1,121 +1,122 @@
 # Deploying Elm Aperture
 
-Two hosts, split along the only line that matters — how big the thing is and
-how often it changes.
+Two Cloudflare Pages projects, split along the only line that matters — how
+big the thing is and how often it changes.
 
-| | Where | Deployed from | Size |
+| | Project | Deployed from | Size |
 | --- | --- | --- | --- |
-| The website | Netlify | GitHub, on push | a few hundred KB |
-| The photographs | Firebase Hosting | this machine, by hand | 207 MB |
+| The website | `elmapt` | GitHub, on push | a few hundred KB |
+| The photographs | `elmapt-media` | this machine, by hand | 211 MB, 1,414 files |
 
-Firebase serves one directory of directories full of `.webp` files. No app, no
-index, no HTML. The site on Netlify reaches in for the frames it needs.
+The media project is a bare directory of directories full of `.webp` files.
+No app, no index, no HTML. The website reaches in for the frames it needs.
 
-Both are free tiers and both stay free. Firebase Spark has no billing account
-attached, so exceeding a limit stops serving until the window resets rather
-than turning into a charge.
+## Why both are on Pages
 
-**No Firebase SDK is shipped.** Frames are ordinary URLs on an ordinary static
-host — nothing Firebase-shaped reaches the browser.
+Free Pages allows 20,000 files per project and 25 MiB per file. The photograph
+set is 1,414 files with a largest file of 832 KB — 7% of the ceiling, with
+room for roughly thirteen times the current library.
+
+**Bandwidth is not metered.** That is the point of the move, more than any
+particular attack: Firebase's no-cost plan stopped serving after 360 MB in a
+day, which is about twenty people reading one delivery — or one bored person
+with a download manager. There is no equivalent lever here. Traffic that would
+have taken the images offline now just gets served.
+
+Everything sits behind Cloudflare's DDoS protection by default, which needs no
+configuration and costs nothing.
 
 ---
 
-## 1. Firebase — the photographs
+## 1. Prerequisite: move the domain
 
-The project's default Hosting site is the image host. There is no second site
-to create and no deploy target to configure; `firebase.json` already points
-`public` at `media/img`.
+`elmapt.com` has to be on Cloudflare DNS — nameservers pointed at Cloudflare,
+not just a CNAME. Everything below assumes the zone is active. This is the
+one irreversible-feeling step; it is also what makes the rest free.
+
+## 2. The photographs
 
 ```sh
 cd ~/Documents/WebDev/elmapt
-pnpm dlx firebase-tools login
-pnpm dlx firebase-tools use --add   # pick the project, alias it "default"
+npx wrangler login
 
-brew install webp                   # one time, for the re-encode step
-./media/refresh.sh                  # builds media/img — 1,414 frames, 207 MB
-pnpm dlx firebase-tools deploy --only hosting
+brew install webp          # one time, for the re-encode step
+./media/refresh.sh         # builds media/img — 1,414 frames, 211 MB
+
+npx wrangler pages project create elmapt-media --production-branch=main
+npx wrangler pages deploy media --project-name=elmapt-media
 ```
 
-That gives you `https://elmapt.web.app/` serving
-`realestate/hotel/thumb/hotel_01_thumb.webp` and so on. The first deploy
-uploads everything and takes a few minutes; after that only changed files
-move.
+**Deploy `media`, not `media/img`.** The trailing `/img` in every URL is not
+a Pages default — it comes from `media/img/` becoming `/img/` at the project
+root, the same way a future `media/video/` would become `/video/` beside it.
+Deploying `media/img` directly drops that prefix and every frame 404s.
+`media/README.md` and `media/refresh.sh` ride along as harmless static files
+at the project root; nothing links to them and nothing serves them as HTML.
 
-`media/img` is git-ignored, so it never reaches GitHub and Netlify never sees
-it. Photograph deploys are always from here.
+Then bind `img.elmapt.com` to that project — Pages → elmapt-media → Custom
+domains. That hostname is what `MEDIA_HOST` in `apps/elmapt/vite.config.ts`
+points at, so **bind it before the site build**, or swap `MEDIA_HOST` to
+`https://elmapt-media.pages.dev/img` for the moment. It is one line either
+way.
 
-## 2. Netlify — the website
+Verify:
 
-`netlify.toml` is in the repo: build command, publish path, the SPA redirect
-the router needs, and cache headers. Netlify detects `pnpm-lock.yaml` and runs
-`pnpm install` at the repo root on its own.
-
-Connect the GitHub repo. That is all — **there is no environment variable to
-set.**
-
-The image host lives as a committed constant, `MEDIA_HOST`, at the top of
-`apps/elmapt/vite.config.ts`:
-
-```ts
-const MEDIA_HOST = "https://elmapt.web.app";
+```sh
+curl -I https://img.elmapt.com/img/realestate/hotel/thumb/hotel_01_thumb.webp
 ```
 
-Every frame URL, the hero preload in `index.html`, and the coverage map are
-built from it, and the build emits a `preconnect` to that origin so the
-connection to the image host is open before the hero needs it. Moving the
-photographs somewhere else is one line and a push.
+`https://img.elmapt.com/` itself will 404 — correct. There is no index there,
+only `/img` (and, later, whatever else lands beside it).
 
-It is committed rather than configured on purpose. That URL is the origin of
-every `<img src>` the site serves — it is in the page source every visitor
-receives, so it is not a secret and cannot become one. Netlify fails any build
-in which a declared environment variable's value turns up in the output, which
-this one necessarily would. Nothing declared, nothing to scan.
+Re-run `refresh.sh` and `pages deploy` after any new shoot; only changed files
+upload. `media/img` is git-ignored, so it never reaches GitHub and the site
+build never sees it.
 
-`VITE_RES_BASE` still overrides it for a local build. Do not set it in
-Netlify; that is the thing that trips the scanner.
+## 3. The website
 
-`elmapt.com` stays pointed wherever it is now until you move it. Deploy
-previews and the `*.netlify.app` URL let you look at this without touching the
-live site.
+Pages → Create → Connect to Git → the repo. Settings:
+
+| | |
+| --- | --- |
+| Build command | `pnpm --filter elmapt build` |
+| Build output directory | `apps/elmapt/dist` |
+| Root directory | `/` |
+
+`wrangler.toml` declares the output directory too, `.node-version` pins Node
+22, and `_redirects` / `_headers` ship in the build output — the SPA rewrite
+the router needs, and cache headers.
+
+**Set no environment variables.** The image host is a committed constant. Then
+bind `elmapt.com` under Custom domains.
+
+## 4. Worth configuring, worth not
+
+Two free settings that bear on hostile traffic, and one that can bite.
+
+- **Hotlink Protection** (Scrape Shield) stops other sites embedding the
+  photographs directly. Requests with no referer still pass, so a link pasted
+  into a message still works. Same-zone referers pass too, which is why the
+  images are on `img.elmapt.com` rather than a `.pages.dev` address.
+- **Cache rules** on `img.elmapt.com` — the frames are already served with a
+  week of `Cache-Control`, and Cloudflare's edge will hold them.
+- **Bot Fight Mode**: leave it off. It challenges unknown user agents, and the
+  primary use of this site is a link dropped into a text or a DM, where an
+  unfurl bot has to fetch the page to produce a preview. Turning it on breaks
+  exactly the thing the site is for.
 
 ## Local builds
 
 ```sh
-pnpm --filter elmapt build     # uses MEDIA_HOST, same as Netlify would
+pnpm --filter elmapt build     # uses MEDIA_HOST, same as CI
 pnpm --filter elmapt dev       # falls back to the public/res symlink
 ```
 
-Neither needs configuring. To aim a local build at some other host, copy
-`apps/elmapt/.env.example` to `.env.local` and set `VITE_RES_BASE`.
+Neither needs configuring. To aim a local build elsewhere, copy
+`apps/elmapt/.env.example` to `.env.local` and set `VITE_IMG_BASE`.
 
-## The budget
+## After cutover
 
-Firebase Spark allows 10 GB stored and 360 MB transferred per day. The
-photographs are 207 MB, so 2% of storage. Transfer is the one to watch:
-
-| | |
-| --- | --- |
-| A category page | ~1 MB |
-| A work page, 24 frames | ~1.2 MB |
-| A full delivery, browsed end to end | ~15 MB |
-| One frame opened in the viewer | ~250 KB |
-
-Roughly 300 ordinary visits a day, or twenty people reading a full delivery
-cover to cover. Frames cache for a week, so returning visitors cost almost
-nothing. Netlify carries only the site, which is a rounding error against any
-bandwidth allowance.
-
-## Notes
-
-- Frames cache for a week with a month of stale-while-revalidate — not
-  `immutable`, because filenames get reused. `headshot_11.webp` is a
-  placeholder today and a real portrait later, and a year-long immutable cache
-  would leave returning visitors looking at the placeholder.
-- The image host sends `Access-Control-Allow-Origin: *`. Not needed for
-  `<img>`, which is not a cross-origin read, but it costs nothing and saves a
-  puzzling afternoon if anything ever pulls a frame into a canvas.
-- To pin pnpm for Netlify, add an exact `"packageManager": "pnpm@x.y.z"` to
-  the root `package.json` — Corepack cannot take a range. Without it Netlify
-  uses its own pnpm, which reads this lockfile fine.
-- `apps/elmapt/public/res` — the symlink into the old repo — is what dev
-  reads, and is excluded from every build. Nothing deployed comes from it.
+Once the site and the images are both live on Cloudflare, these are dead and
+can be deleted: `firebase.json`, `.firebaserc`, `.firebase/`, `netlify.toml`.
+Leave them until then.

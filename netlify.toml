@@ -2,7 +2,7 @@
 # and the app is pointed at them by a committed constant in
 # apps/elmapt/vite.config.ts.
 #
-# There is deliberately no VITE_RES_BASE here. The image host is a public URL
+# There is deliberately no VITE_IMG_BASE here. The image host is a public URL
 # that appears in every <img src> the site serves, and Netlify fails any build
 # where a declared environment variable's value shows up in the output. It is
 # not a secret, so it is not a variable.

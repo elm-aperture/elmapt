@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "description": "Elm Aperture — monorepo for elmapt.com and its apps.",
   "private": true,
+  "scripts": {
+    "dev": "pnpm --filter elmapt dev",
+    "host": "pnpm --filter elmapt host",
+    "build": "pnpm --filter elmapt build",
+    "lint": "pnpm --filter elmapt lint",
+    "preview": "pnpm --filter elmapt preview"
+  },
   "type": "module",
   "packageManager": "pnpm@11.22.0",
   "devEngines": {

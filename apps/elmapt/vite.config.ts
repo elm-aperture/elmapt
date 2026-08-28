@@ -1,5 +1,6 @@
-import { cpSync, readdirSync } from "node:fs";
+import { cpSync, existsSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig, loadEnv } from "vite";
 import type { Plugin } from "vite";
 import react from "@vitejs/plugin-react";
@@ -11,11 +12,15 @@ import react from "@vitejs/plugin-react";
  * the two have nothing in common — different sizes, different cadences,
  * different tooling. This build never touches them.
  *
- * Dev reads them through apps/elmapt/public/res, the symlink into the old
- * repo, so a checkout works with no configuration at all. A build points at
- * the image host below. */
-
-const DEV_MEDIA = "/res/img";
+ * Dev and build both read them from the image host below. That is the whole
+ * configuration: a fresh checkout runs and shows the real site with no .env
+ * file, no symlink, and no dependence on which directory the command was
+ * typed in.
+ *
+ * Reading them off disk is a deliberate opt-in: VITE_IMG_BASE=/res/img, which
+ * resolves through apps/elmapt/public/res, a symlink into a local copy of the
+ * media tree that is not part of a checkout and may not exist. Use it to work
+ * without a network, or to look at a re-encode before it goes up. */
 
 /* The image host, committed rather than configured.
  *
@@ -28,15 +33,14 @@ const DEV_MEDIA = "/res/img";
  * The trailing /img is load-bearing, not decoration: img.elmapt.com serves
  * more than one kind of asset off separate path prefixes, /img is only the
  * one that exists today, and a future /video (or similar) sits beside it
- * rather than under it.
- *
- * Before the first build, the media Pages project needs this custom domain
- * bound to it. Until then, use its own address instead:
- *   const MEDIA_HOST = "https://elmapt-media.pages.dev/img";
- *
- * VITE_IMG_BASE overrides it for a local build. Do not set it in CI. */
+ * rather than under it. */
 
 const MEDIA_HOST = "https://img.elmapt.com/img";
+
+/* Beside this file, which is also the Vite root. Everything below reads from
+ * here rather than from the shell's working directory, so it does not matter
+ * whether the command was run in this directory or at the monorepo root. */
+const CONFIG_DIR = fileURLToPath(new URL(".", import.meta.url));
 
 const isRemote = (base: string) => /^https?:\/\//.test(base);
 
@@ -62,9 +66,9 @@ function mediaHtml(base: string): Plugin {
   };
 }
 
-/* Vite's public/ copy is all-or-nothing, and public/ holds the dev symlink —
- * three hundred and seventy megabytes of photographs that must never end up
- * in a deploy. So everything else in public/ is copied by hand. */
+/* Vite's public/ copy is all-or-nothing, and public/ can hold the media
+ * symlink — hundreds of megabytes of photographs that must never end up in a
+ * deploy. So everything else in public/ is copied by hand. */
 function publicAssets(): Plugin {
   let publicDir = "";
   let outDir = "";
@@ -89,11 +93,14 @@ function publicAssets(): Plugin {
 }
 
 export default defineConfig(({ command, mode }) => {
-  const env = loadEnv(mode, process.cwd(), "VITE_");
+  /* From beside this config, not from process.cwd(). Read from the cwd, an
+     .env.local sitting in this directory is silently missed by `pnpm dev` at
+     the monorepo root — and the failure is a homepage showing its backdrop
+     and nothing else, with nothing in the console to explain it. */
+  const env = loadEnv(mode, CONFIG_DIR, "VITE_");
   const override = env.VITE_IMG_BASE?.trim();
 
-  const media =
-    command === "build" ? override || MEDIA_HOST : override || DEV_MEDIA;
+  const media = override || MEDIA_HOST;
 
   /* A build serving photographs from a relative path would be one that had
      bundled them, which this one never does. */
@@ -103,6 +110,22 @@ export default defineConfig(({ command, mode }) => {
         "photographs from the image host; the bundle does not carry them. " +
         "Unset VITE_IMG_BASE to use the committed default. See DEPLOY.md.",
     );
+  }
+
+  /* Reading off disk is opt-in, so a path that does not resolve is a typo or
+     a moved folder, not a fallback. Stop on it: the symptom otherwise is a
+     site that loads perfectly and shows no photographs. */
+  if (!isRemote(media)) {
+    const [, top] = media.split("/");
+    if (!top || !existsSync(join(CONFIG_DIR, "public", top))) {
+      throw new Error(
+        `VITE_IMG_BASE is "${media}", which reads the photographs from ` +
+          `apps/elmapt/public/${top ?? ""} — and that path does not resolve. ` +
+          "public/res is a symlink into a local copy of the media tree; if " +
+          "the copy has moved, repoint the symlink, or unset VITE_IMG_BASE " +
+          `to use ${MEDIA_HOST}.`,
+      );
+    }
   }
 
   return {
