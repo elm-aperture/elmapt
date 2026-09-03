@@ -1,13 +1,77 @@
-/* A closing mark, not a nav row — no band, no border, no background. Just
-   one quiet way out to where the work lives elsewhere. */
-
 .footer {
+  position: absolute;
+  left: 50%;
+
+  bottom: 100%;
+  transform: translateX(-50%);
+
+  width: var(--notch-w);
+  height: calc(var(--notch-w) / 2);
+
+  display: flex;
+  flex-direction: column;
+
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--elm-space-2);
+  padding: 0 var(--elm-space-5) 10px;
+
+  border-radius: var(--elm-radius-pill) var(--elm-radius-pill) 0 0;
+  border-bottom: 0;
+
+  --elm-glass-tint: var(--pane-tint);
+  --elm-glass-tint-solid: var(--pane-tint-solid);
+  --elm-glass-edge: rgba(241, 243, 247, 0.16);
+
+  box-shadow:
+    inset 0 1px 0 var(--elm-glass-rim),
+    0 -14px 36px rgba(0, 0, 0, 0.45);
+
+  color: var(--elm-ink-dim);
+
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.footer:active {
+  cursor: grabbing;
+}
+
+.footer__grab {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--elm-space-3);
-  padding-block: var(--elm-rhythm) clamp(28px, 5vw, 56px);
-  color: var(--elm-ink-faint);
+  gap: var(--elm-space-2);
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: inherit;
+}
+
+.footer__line {
+  margin: 0;
+}
+
+.footer__line--lead {
+  font-size: calc(var(--elm-text-md) * 1.25);
+  color: var(--elm-ink-soft);
+}
+
+.footer__amp {
+  font-size: 0.8em;
+  vertical-align: 0.09em;
+}
+
+.footer__line--place {
+  letter-spacing: var(--elm-track-wide);
+
+  text-indent: var(--elm-track-wide);
 }
 
 .footer__icons {
@@ -37,16 +101,19 @@
   height: 20px;
 }
 
-/* The homepage never scrolls, so there is no "after the content" for this to
-   sit in — it has to be pinned to the bottom of the one screen instead.
-   Footer renders as a root-level sibling of .elm-page (same as BookingDock),
-   so there's no positioned ancestor to anchor an absolute box to — this has
-   to be fixed against the viewport instead. */
-.footer--floating {
-  position: fixed;
-  left: 50%;
-  bottom: calc(clamp(14px, 2.2vw, 28px) + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  padding-block: 0;
-  z-index: var(--elm-z-chrome);
+@media (max-width: 430px) {
+  .footer {
+    padding-inline: var(--elm-space-4);
+  }
+}
+
+@media (max-width: 374px) {
+  .footer {
+    padding-inline: var(--elm-space-4);
+    padding-bottom: 8px;
+  }
+
+  .footer__line--lead {
+    font-size: calc(var(--elm-text-sm) * 1.25);
+  }
 }

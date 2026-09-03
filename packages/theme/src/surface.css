@@ -1,9 +1,3 @@
-/* surface — the acrylic language.
- *
- * This is the house material: a tinted pane, a bright top rim, a hairline
- * edge, and depth from shadow rather than from stroke weight. It belongs on
- * chrome — nav, controls, containers — and deliberately not on photographs. */
-
 .elm-surface {
   position: relative;
   background-color: var(--elm-glass-tint);
@@ -21,9 +15,9 @@
   }
 }
 
-/* opaque fallback where the pane sits over scrolling content and blur is
-   unavailable — a translucent bar with no blur is just a smear */
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
   .elm-surface {
     background-color: var(--elm-glass-tint-solid);
   }
@@ -39,7 +33,6 @@
   box-shadow: inset 0 1px 0 rgba(241, 243, 247, 0.08);
 }
 
-/* a bare hairline divider that fades at both ends */
 .elm-rule {
   flex: 1 1 auto;
   height: 1px;

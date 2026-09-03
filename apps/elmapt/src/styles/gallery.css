@@ -1,6 +1,3 @@
-/* These breakpoints must match BREAK_WIDE and BREAK_MID in gallery/mosaic.ts,
- * which the images' `sizes` attribute is written against. */
-
 .mosaic {
   --elm-mosaic-cols: var(--cols-narrow, 3);
 }
@@ -26,7 +23,6 @@
   padding-bottom: var(--elm-space-3);
   border-bottom: 1px solid var(--elm-line-soft);
 
-  /* clears the sticky bar and the section marker */
   scroll-margin-top: 132px;
 
   font-family: var(--elm-font-sans);

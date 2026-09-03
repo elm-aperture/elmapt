@@ -1,7 +1,6 @@
 :root {
   color-scheme: dark;
 
-  /* ── ground + ink ───────────────────────────────────────────────── */
   --elm-bg: #07090d;
   --elm-bg-raised: #0b0e13;
 
@@ -10,8 +9,6 @@
   --elm-ink-dim: rgba(241, 243, 247, 0.5);
   --elm-ink-faint: rgba(241, 243, 247, 0.28);
 
-  /* ── ambient field ──────────────────────────────────────────────── */
-  /* rgb triplets so alpha stays tunable per surface */
   --elm-amb-1: 62 116 176;
   --elm-amb-1a: 0.1;
   --elm-amb-2: 98 74 158;
@@ -19,7 +16,6 @@
   --elm-amb-3: 178 140 78;
   --elm-amb-3a: 0.05;
 
-  /* anchor points, animated at runtime by the drift hook */
   --elm-p1x: 84%;
   --elm-p1y: 16%;
   --elm-p2x: 14%;
@@ -27,10 +23,8 @@
   --elm-p3x: 74%;
   --elm-p3y: 56%;
 
-  /* ── accent ─────────────────────────────────────────────────────── */
   --elm-accent: 138 176 214;
 
-  /* ── hairlines + glass ──────────────────────────────────────────── */
   --elm-line: rgba(241, 243, 247, 0.12);
   --elm-line-soft: rgba(241, 243, 247, 0.06);
 
@@ -41,7 +35,6 @@
   --elm-glass-blur: 20px;
   --elm-glass-saturate: 140%;
 
-  /* ── spacing (4px base) ─────────────────────────────────────────── */
   --elm-space-1: 4px;
   --elm-space-2: 8px;
   --elm-space-3: 12px;
@@ -52,29 +45,22 @@
   --elm-space-8: 64px;
   --elm-space-9: 96px;
 
-  /* ── page rhythm ────────────────────────────────────────────────── */
   --elm-gutter: clamp(16px, 4vw, 40px);
   --elm-rhythm: clamp(56px, 9vw, 128px);
   --elm-measure: 1320px;
   --elm-measure-text: 62ch;
 
-  /* ── radius ─────────────────────────────────────────────────────── */
   --elm-radius-sm: 10px;
   --elm-radius-md: 14px;
   --elm-radius-lg: 20px;
   --elm-radius-xl: 26px;
   --elm-radius-pill: 999px;
 
-  /* ── elevation ──────────────────────────────────────────────────── */
   --elm-shadow-glass:
     inset 0 1px 0 var(--elm-glass-rim),
-    inset 0 0 0 1px rgba(241, 243, 247, 0.035),
-    0 18px 44px rgba(0, 0, 0, 0.5);
+    inset 0 0 0 1px rgba(241, 243, 247, 0.035), 0 18px 44px rgba(0, 0, 0, 0.5);
   --elm-shadow-lift: 0 24px 60px rgba(0, 0, 0, 0.55);
 
-  /* ── motion ─────────────────────────────────────────────────────── */
-  /* one curve, reused everywhere. Deviating from it is a design decision,
-     not a default. */
   --elm-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --elm-ease-in: cubic-bezier(0.6, 0, 0.9, 0.4);
 
@@ -83,11 +69,11 @@
   --elm-dur-3: 420ms;
   --elm-dur-4: 720ms;
 
-  /* ── type ───────────────────────────────────────────────────────── */
-  --elm-font-display: "Libre Caslon Text", "Iowan Old Style", "Hoefler Text",
-    Georgia, serif;
-  --elm-font-sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI",
-    Helvetica, Arial, sans-serif;
+  --elm-font-display:
+    "Libre Caslon Text", "Iowan Old Style", "Hoefler Text", Georgia, serif;
+  --elm-font-sans:
+    "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Helvetica, Arial,
+    sans-serif;
 
   --elm-track-tight: -0.01em;
   --elm-track-normal: 0;
@@ -106,7 +92,6 @@
   --elm-leading-snug: 1.3;
   --elm-leading-normal: 1.55;
 
-  /* ── layers ─────────────────────────────────────────────────────── */
   --elm-z-ambient: -1;
   --elm-z-content: 1;
   --elm-z-chrome: 100;

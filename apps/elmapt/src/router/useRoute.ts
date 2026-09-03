@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useSyncExternalStore } from "react";
-import { getSnapshot, navigate, startHistory, startLinkCapture, subscribe } from "./history";
+import {
+  getSnapshot,
+  navigate,
+  startHistory,
+  startLinkCapture,
+  subscribe,
+} from "./history";
 import { redirectFor, resolve } from "./routes";
 import type { Screen } from "./routes";
 
@@ -22,8 +28,6 @@ export function useLocation(): Location {
   }, [raw]);
 }
 
-/* Installs the history and link listeners once, honours the legacy flat
- * addresses, and hands back whatever screen the current path names. */
 export function useRoute(): Screen {
   const { pathname } = useLocation();
 

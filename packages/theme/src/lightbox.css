@@ -1,5 +1,3 @@
-/* lightbox — one instance per page, holding one photograph. */
-
 .elm-lightbox {
   position: fixed;
   inset: 0;
@@ -47,8 +45,6 @@
   opacity: 1;
 }
 
-/* The scrim is painted by the element itself, so the UA backdrop stays out
-   of the way. */
 .elm-lightbox::backdrop {
   background: rgba(2, 4, 7, 0.6);
 }
@@ -59,9 +55,6 @@
   }
 }
 
-/* Sized from the viewport rather than from its contents: a percentage box
-   around an image that is itself a percentage of that box has no solution,
-   and the browser resolves the cycle by making both small. */
 .elm-lightbox__figure {
   --lb-pad: clamp(16px, 4vw, 64px);
 
@@ -90,11 +83,6 @@
   object-fit: contain;
 }
 
-/* The thumbnail is already decoded and on screen when the tile is clicked, so
-   it stands in at full size from the first frame and the full-resolution file
-   cross-fades over it whenever it lands. Nothing waits on the network. */
-/* Carries the intrinsic box of the master file, so it lays out at the right
-   size from the first frame and the panel never resizes under the reader. */
 .elm-lightbox__img--proxy {
   filter: blur(8px);
   transform: scale(1.04);
@@ -126,9 +114,7 @@
 
   border: 1px solid var(--elm-glass-edge);
   border-radius: var(--elm-radius-pill);
-  /* sits over the photograph, which is as likely to be a white-tiled lobby
-     as a night exterior, so it carries more of its own ground than the
-     chrome elsewhere does */
+
   background-color: rgba(4, 6, 10, 0.66);
 
   font-family: var(--elm-font-sans);
@@ -212,7 +198,6 @@
   right: calc(12px + env(safe-area-inset-right));
 }
 
-/* On a phone the frame wants the whole width; arrows are replaced by swipe. */
 @media (max-width: 700px) {
   .elm-lightbox__control--prev,
   .elm-lightbox__control--next {

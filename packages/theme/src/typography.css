@@ -1,7 +1,3 @@
-/* typography — editorial serif for voice, sans for chrome.
- * Wide-tracked uppercase stands in for small caps: it survives font fallback,
- * which synthesised small caps does not. */
-
 .elm-display {
   font-family: var(--elm-font-display);
   font-size: var(--elm-text-2xl);
@@ -18,7 +14,7 @@
   line-height: 1;
   text-transform: uppercase;
   letter-spacing: var(--elm-track-wide);
-  /* trailing tracking pushes the optical centre right; pull it back */
+
   text-indent: var(--elm-track-wide);
   color: var(--elm-ink);
   white-space: nowrap;
@@ -45,7 +41,6 @@
   color: var(--elm-ink-soft);
 }
 
-/* the one sentence a page is allowed */
 .elm-lede {
   font-family: var(--elm-font-display);
   font-size: var(--elm-text-lg);

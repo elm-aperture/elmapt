@@ -17,7 +17,13 @@ export function FigureSection({ heading, src, alt }: Figure) {
     <section className="figure elm-section--tight">
       <div className="elm-container elm-center">
         <SectionHead>{heading}</SectionHead>
-        <img className="figure__img" src={src} alt={alt} loading="lazy" decoding="async" />
+        <img
+          className="figure__img"
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     </section>
   );

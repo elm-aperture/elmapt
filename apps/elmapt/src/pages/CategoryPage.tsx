@@ -1,27 +1,15 @@
-import { useState } from "react";
 import type { CSSProperties } from "react";
 import { PageHeader } from "../components/PageHeader";
+import { useLoaded } from "../hooks/useLoaded";
 import { pathToWork } from "../router/routes";
 import { intrinsic, srcSetFor, thumbSrc } from "../gallery/sources";
 import { NO_FRAMES } from "../gallery/manifest";
 import type { Category, Work } from "../gallery/types";
 import "../styles/work.css";
 
-/* The landing for a vertical.
- *
- * A category is a fork in the road, not a gallery — clicking Real Estate is
- * how you get to hotels, motels, commercial or residential, and showing three
- * frames from each instead just makes a weak gallery out of a strong choice.
- *
- * So: one door per body of work, each one photograph big enough to be worth
- * looking at, named and counted. The sets themselves live one click deeper. */
-
-/* matches --elm-measure minus its gutters, and the grid gap below */
 const CONTENT = 1240;
 const GAP = 20;
 
-/* Widest arrangement that leaves no orphan on the last row. Upright frames
- * tolerate an extra column because they are already tall. */
 function columnsFor(count: number, upright: boolean): number {
   const widest = upright ? 4 : 3;
   for (let columns = widest; columns >= 2; columns -= 1) {
@@ -52,7 +40,7 @@ function Door({
   work: Work;
   columns: number;
 }) {
-  const [loaded, setLoaded] = useState(false);
+  const { loaded, capture, onLoad, onError } = useLoaded();
   const frame = work.cover ?? 1;
   const box = intrinsic(work.gallery);
   const frameStyle: FrameVars = { aspectRatio: work.gallery.ratio };
@@ -72,13 +60,14 @@ function Door({
         </span>
 
         <span
-          className={`elm-tile elm-tile--link chooser__frame${empty ? " chooser__frame--empty" : ""}`}
+          className={`elm-tile elm-tile--link chooser__frame${empty ? " chooser__frame--empty" : ""}${loaded || empty ? "" : " elm-skeleton"}`}
           style={frameStyle}
         >
           {empty ? (
             <span className="chooser__empty elm-eyebrow">{NO_FRAMES}</span>
           ) : (
             <img
+              ref={capture}
               className={`elm-tile__img${loaded ? " is-loaded" : ""}`}
               src={thumbSrc(work.gallery, frame)}
               srcSet={srcSetFor(work.gallery, frame)}
@@ -89,7 +78,8 @@ function Door({
               loading="lazy"
               decoding="async"
               draggable={false}
-              onLoad={() => setLoaded(true)}
+              onLoad={onLoad}
+              onError={onError}
             />
           )}
         </span>

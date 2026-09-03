@@ -1,5 +1,3 @@
-/* reset — only what the system actually depends on. */
-
 *,
 *::before,
 *::after {
@@ -76,7 +74,7 @@ a {
 }
 
 :focus-visible {
-  outline: 2px solid rgba(var(--elm-accent) / 0.75);
+  outline: 2px solid currentColor;
   outline-offset: 3px;
   border-radius: var(--elm-radius-sm);
 }

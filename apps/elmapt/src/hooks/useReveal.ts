@@ -1,12 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-/* Flips an element to its revealed state the first time it enters the
- * viewport, then stops observing. One-shot on purpose: content that fades
- * back out on scroll-up is a novelty, not a reading experience.
- *
- * Where IntersectionObserver is missing the initial state is already
- * revealed, so nothing is ever hidden behind an API that will not arrive. */
-
 export function useReveal<T extends HTMLElement>(
   rootMargin = "0px 0px -12% 0px",
 ) {

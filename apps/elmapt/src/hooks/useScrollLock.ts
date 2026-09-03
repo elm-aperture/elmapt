@@ -1,8 +1,5 @@
 import { useEffect } from "react";
 
-/* Holds the page still while an overlay is open, and pads out the gutter the
- * scrollbar leaves behind so the layout underneath does not jump sideways. */
-
 export function useScrollLock(locked: boolean): void {
   useEffect(() => {
     if (!locked) return;

@@ -1,0 +1,75 @@
+.people__frame {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+}
+
+.people__img {
+  object-position: var(--person-focus, 50% 50%);
+}
+
+.people__role {
+  flex: 0 0 auto;
+  color: var(--elm-ink-faint);
+}
+
+.person__body {
+  display: grid;
+  gap: clamp(24px, 4vw, 40px);
+  align-items: start;
+  padding-bottom: clamp(32px, 6vw, 72px);
+}
+
+@media (min-width: 860px) {
+  .person__body {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(32px, 5vw, 72px);
+  }
+}
+
+.person__frame {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+
+  cursor: default;
+}
+
+.person__text {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(22px, 3vw, 34px);
+}
+
+.person__bio {
+  text-wrap: pretty;
+}
+
+.person__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(14px, 2vw, 26px);
+}
+
+.person__link {
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-sm);
+  line-height: 1;
+  letter-spacing: var(--elm-track-normal);
+  color: var(--elm-ink-dim);
+  transition: color var(--elm-dur-2) var(--elm-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.person__link:hover {
+  color: var(--elm-ink);
+}
+
+.person__link:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .person__frame:hover .elm-tile__img {
+    transform: none;
+  }
+}

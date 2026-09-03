@@ -1,15 +1,18 @@
 import { useEffect } from "react";
 import { AmbientField } from "./components/AmbientField";
 import { TopNav } from "./components/TopNav";
-import { Footer } from "./components/Footer";
+import { Sheet } from "./components/Sheet";
 import { HomePage } from "./pages/HomePage";
 import { CategoryPage } from "./pages/CategoryPage";
 import { WorkPage } from "./pages/WorkPage";
 import { CaseStudyPage } from "./pages/CaseStudyPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
+import { PhotographersPage } from "./pages/PhotographersPage";
+import { PhotographerPage } from "./pages/PhotographerPage";
 import { BookingDock } from "./components/BookingDock";
 import { isViewingFrame } from "./hooks/useLightbox";
 import { useScrollLock } from "./hooks/useScrollLock";
+import { useSheet } from "./hooks/useSheet";
 import { useLocation, useRoute } from "./router/useRoute";
 import type { Screen } from "./router/routes";
 import { site } from "./site/site";
@@ -22,6 +25,10 @@ function screenTitle(screen: Screen): string {
       return `${screen.work.title} — ${site.name}`;
     case "study":
       return `${screen.study.name} — ${site.name}`;
+    case "people":
+      return `Photographers — ${site.name}`;
+    case "person":
+      return `${screen.person.name} — ${site.name}`;
     case "missing":
       return `Not found — ${site.name}`;
     default:
@@ -45,6 +52,10 @@ function view(screen: Screen) {
           study={screen.study}
         />
       );
+    case "people":
+      return <PhotographersPage />;
+    case "person":
+      return <PhotographerPage person={screen.person} />;
     case "missing":
       return <NotFoundPage />;
     case "redirecting":
@@ -56,10 +67,10 @@ export default function App() {
   const screen = useRoute();
   const { hash } = useLocation();
 
-  /* The homepage fills exactly one screen by sizing, not by policy — this is
-     the explicit backstop: nothing overflow-triggering should ever be able
-     to sneak a scrollbar in underneath it. */
-  useScrollLock(screen.kind === "home");
+  const home = screen.kind === "home";
+  const sheet = useSheet({ enabled: home });
+
+  useScrollLock(home || sheet.open);
 
   useEffect(() => {
     document.title = screenTitle(screen);
@@ -71,14 +82,13 @@ export default function App() {
 
       <div className="elm-page">
         <TopNav />
-        <main
-          className={`page__main${screen.kind === "home" ? " page__main--home" : ""}`}
-        >
+        <main className={`page__main${home ? " page__main--home" : ""}`}>
           {view(screen)}
         </main>
+
+        {home && <Sheet sheet={sheet} />}
       </div>
 
-      <Footer floating={screen.kind === "home"} />
       <BookingDock hidden={isViewingFrame(hash)} />
     </>
   );

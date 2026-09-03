@@ -1,32 +1,64 @@
 import { resUrl } from "./sources";
 import { UNATTRIBUTED } from "./types";
-import type { Category, CaseStudy, Columns, Gallery, Plate, Work } from "./types";
+import type {
+  Category,
+  CaseStudy,
+  Columns,
+  Gallery,
+  Plate,
+  Span,
+  Work,
+} from "./types";
 
-/* The pair below is not arbitrary and is not free to change casually. Twenty
- * four frames with wide cells at 1, 7, 13 and 19 was checked against CSS's
- * own dense placement at six, four and three columns and leaves no hole at
- * any of them. Nudging either number will almost certainly break that —
- * 24 with wide at {1,2,4,7,13}, for instance, leaves three holes at six
- * columns. Re-verify before changing either. */
+const L: Span = [2, 2];
+const XL: Span = [3, 3];
+const M: Span = [1, 2];
 
-export const FRAMES_PER_SET = 24;
+export const FRAMES_PER_SET = 18;
 
-export const WIDE_POSITIONS = [1, 7, 13, 19] as const;
-
-/* Deliveries are not sets and have no quota: the job is finished, and there
- * is no number anyone can go and shoot to fill it. Their sections round up to
- * six instead, and their column ladder is chosen so six divides it at every
- * width. */
 const DELIVERY_BLOCK = 6;
 
 const LANDSCAPE: Columns = [6, 4, 3];
-const UPRIGHT: Columns = [4, 3, 2];
+
+const UPRIGHT: Columns = [6, 3, 2];
 const DELIVERY: Columns = [6, 3, 3];
 
 const WIDESCREEN = 1.5;
 const UPRIGHT_RATIO = 2 / 3;
 
-/* ── real estate ──────────────────────────────────────────────────────── */
+const HOTEL_SPANS: Readonly<Record<number, Span>> = {
+  1: XL,
+  3: L,
+  10: M,
+  12: L,
+  13: L,
+};
+
+const MOTEL_SPANS: Readonly<Record<number, Span>> = {
+  1: L,
+  2: XL,
+  4: M,
+  7: L,
+  13: L,
+};
+
+const COMMERCIAL_SPANS: Readonly<Record<number, Span>> = {
+  1: L,
+  4: XL,
+  8: M,
+  9: L,
+  16: L,
+};
+
+const RESIDENTIAL_SPANS: Readonly<Record<number, Span>> = {
+  1: L,
+  2: M,
+  7: L,
+  8: XL,
+  12: L,
+};
+
+const REAL_ESTATE_MID = false;
 
 const hotelGallery: Gallery = {
   id: "hotel",
@@ -35,8 +67,9 @@ const hotelGallery: Gallery = {
   count: 18,
   pad: 2,
   ratio: WIDESCREEN,
-  wide: WIDE_POSITIONS,
+  spans: HOTEL_SPANS,
   cols: LANDSCAPE,
+  mid: REAL_ESTATE_MID,
   block: FRAMES_PER_SET,
   plates: [
     { title: "Holiday Inn Express", where: "Schulenberg, TX", by: "Rain" },
@@ -66,7 +99,8 @@ const holidayInnExpress: CaseStudy = {
   line: "Hospitality coverage designed around comfort, atmosphere, and competitive presentation within market class.",
   card: {
     label: "View a full hotel delivery",
-    blurb: "347 delivered frames: rooms, lobbies, amenities, exteriors, and guest-facing spaces.",
+    blurb:
+      "347 delivered frames: rooms, lobbies, amenities, exteriors, and guest-facing spaces.",
     frame: 345,
   },
   gallery: {
@@ -76,7 +110,7 @@ const holidayInnExpress: CaseStudy = {
     count: 347,
     pad: 3,
     ratio: WIDESCREEN,
-    wide: [],
+    spans: {},
     cols: DELIVERY,
     block: DELIVERY_BLOCK,
   },
@@ -103,8 +137,9 @@ const motelGallery: Gallery = {
   count: 18,
   pad: 2,
   ratio: WIDESCREEN,
-  wide: WIDE_POSITIONS,
+  spans: MOTEL_SPANS,
   cols: LANDSCAPE,
+  mid: REAL_ESTATE_MID,
   block: FRAMES_PER_SET,
   plates: [
     { title: "River Valley Motor Inn", where: "La Grange, TX", by: "Rain" },
@@ -134,7 +169,8 @@ const riverValleyInn: CaseStudy = {
   line: "A recently repositioned Texas roadside property: updated reception, five room types, accessibility accommodations, and regional detail coverage.",
   card: {
     label: "View a full motel delivery",
-    blurb: "178 delivered frames: rooms, signage, amenities, bathrooms, exteriors, and property detail.",
+    blurb:
+      "178 delivered frames: rooms, signage, amenities, bathrooms, exteriors, and property detail.",
     frame: 6,
   },
   gallery: {
@@ -144,7 +180,7 @@ const riverValleyInn: CaseStudy = {
     count: 178,
     pad: 3,
     ratio: WIDESCREEN,
-    wide: [],
+    spans: {},
     cols: DELIVERY,
     block: DELIVERY_BLOCK,
   },
@@ -166,8 +202,9 @@ const commercialGallery: Gallery = {
   count: 18,
   pad: 2,
   ratio: WIDESCREEN,
-  wide: WIDE_POSITIONS,
+  spans: COMMERCIAL_SPANS,
   cols: LANDSCAPE,
+  mid: REAL_ESTATE_MID,
   block: FRAMES_PER_SET,
   plates: [
     { title: "The Mayfair", where: "3400 Welborn", by: "Rain" },
@@ -198,8 +235,9 @@ const residentialGallery: Gallery = {
   count: 18,
   pad: 2,
   ratio: WIDESCREEN,
-  wide: WIDE_POSITIONS,
+  spans: RESIDENTIAL_SPANS,
   cols: LANDSCAPE,
+  mid: REAL_ESTATE_MID,
   block: FRAMES_PER_SET,
   plates: [
     { title: "Living Room", where: "bracket", by: "Rain" },
@@ -223,10 +261,6 @@ const residentialGallery: Gallery = {
   ],
 };
 
-/* ── portrait ─────────────────────────────────────────────────────────── */
-
-/* Do not remove filler images; photographer must shoot to them */
-
 const filler: Plate = { title: "filler image", by: UNATTRIBUTED };
 
 const fillTo = (plates: readonly Plate[], total: number): readonly Plate[] => [
@@ -234,16 +268,14 @@ const fillTo = (plates: readonly Plate[], total: number): readonly Plate[] => [
   ...Array.from({ length: total - plates.length }, () => filler),
 ];
 
-const PORTRAIT_FILES = 18;
-
 const headshotGallery: Gallery = {
   id: "headshot",
   dir: "portrait",
   slug: "headshot",
-  count: PORTRAIT_FILES,
+  count: FRAMES_PER_SET,
   pad: 2,
   ratio: UPRIGHT_RATIO,
-  wide: [],
+  spans: {},
   cols: UPRIGHT,
   block: FRAMES_PER_SET,
   plates: fillTo(
@@ -259,7 +291,7 @@ const headshotGallery: Gallery = {
       { title: "Julie", by: "Maivy" },
       { title: "Grace", by: "Rain" },
     ],
-    PORTRAIT_FILES,
+    FRAMES_PER_SET,
   ),
 };
 
@@ -267,10 +299,10 @@ const professionalGallery: Gallery = {
   id: "professional",
   dir: "portrait",
   slug: "professional",
-  count: PORTRAIT_FILES,
+  count: FRAMES_PER_SET,
   pad: 2,
   ratio: UPRIGHT_RATIO,
-  wide: [],
+  spans: {},
   cols: UPRIGHT,
   block: FRAMES_PER_SET,
   plates: fillTo(
@@ -284,7 +316,7 @@ const professionalGallery: Gallery = {
       { title: "Dayle", where: "therapist", by: "Rain" },
       { title: "Vashtai", where: "spa director", by: "Rain" },
     ],
-    PORTRAIT_FILES,
+    FRAMES_PER_SET,
   ),
 };
 
@@ -292,10 +324,10 @@ const lifestyleGallery: Gallery = {
   id: "lifestyle",
   dir: "portrait",
   slug: "lifestyle",
-  count: PORTRAIT_FILES,
+  count: FRAMES_PER_SET,
   pad: 2,
   ratio: UPRIGHT_RATIO,
-  wide: [],
+  spans: {},
   cols: UPRIGHT,
   block: FRAMES_PER_SET,
   plates: fillTo(
@@ -316,13 +348,10 @@ const lifestyleGallery: Gallery = {
       { title: "Adam", where: "Prosper crop field", by: "Rain" },
       { title: "Tea", where: "with an umbrella", by: "Rain" },
     ],
-    PORTRAIT_FILES,
+    FRAMES_PER_SET,
   ),
 };
 
-/* Not shot into public/res yet. A set with no frames is a real state the
- * engine knows how to render — the vertical exists and says so, and becomes a
- * normal gallery the moment a delivery lands under its slug. */
 const artistGallery: Gallery = {
   id: "artist",
   dir: "portrait",
@@ -330,12 +359,51 @@ const artistGallery: Gallery = {
   count: 0,
   pad: 2,
   ratio: UPRIGHT_RATIO,
-  wide: [],
+  spans: {},
   cols: UPRIGHT,
   block: FRAMES_PER_SET,
 };
 
-/* ── events ───────────────────────────────────────────────────────────── */
+const WEDDING_SPANS: Readonly<Record<number, Span>> = {
+  1: L,
+  2: M,
+  3: XL,
+  11: L,
+  13: L,
+};
+
+const LIVE_SPANS: Readonly<Record<number, Span>> = {
+  1: M,
+  2: L,
+  4: XL,
+  11: L,
+  14: L,
+};
+
+const CONCERTS_SPANS: Readonly<Record<number, Span>> = {
+  1: XL,
+  2: M,
+  3: L,
+  11: L,
+  13: L,
+};
+
+const concertsGallery: Gallery = {
+  id: "concerts",
+  dir: "events",
+  slug: "concerts",
+  count: 3,
+  pad: 2,
+  ratio: WIDESCREEN,
+  spans: CONCERTS_SPANS,
+  cols: LANDSCAPE,
+  block: FRAMES_PER_SET,
+  plates: [
+    { title: "Roots Remain", where: "Big Rob's", by: "Maivy" },
+    { title: "Roots Remain", where: "Big Rob's", by: "Rain" },
+    { title: "Eshtadur", where: "Big Rob's", by: "Maivy" },
+  ],
+};
 
 const weddingGallery: Gallery = {
   id: "wedding",
@@ -344,7 +412,7 @@ const weddingGallery: Gallery = {
   count: 18,
   pad: 2,
   ratio: WIDESCREEN,
-  wide: WIDE_POSITIONS,
+  spans: WEDDING_SPANS,
   cols: LANDSCAPE,
   block: FRAMES_PER_SET,
   plates: [
@@ -376,7 +444,7 @@ const liveGallery: Gallery = {
   count: 18,
   pad: 2,
   ratio: WIDESCREEN,
-  wide: WIDE_POSITIONS,
+  spans: LIVE_SPANS,
   cols: LANDSCAPE,
   block: FRAMES_PER_SET,
   plates: [
@@ -389,9 +457,10 @@ const liveGallery: Gallery = {
     { title: "Mai Colachi", where: "Carrollton", by: "Rain" },
     { title: "Botswana Independence Day", where: "Argyle", by: "Rain" },
     { title: "Botswana Independence Day", where: "Argyle", by: "Rain" },
-    { title: "Roots Remain", where: "Big Rob's", by: "Maivy" },
-    { title: "Roots Remain", where: "Big Rob's", by: "Rain" },
-    { title: "Eshtadur", where: "Big Rob's", by: "Maivy" },
+
+    filler,
+    filler,
+    filler,
     { title: "Mogul Red Carpet", where: "Irving", by: "Maivy" },
     { title: "Rooftop Birthday", where: "Dallas", by: "Rain" },
     { title: "Mogul Red Carpet", where: "Irving", by: "Rain" },
@@ -401,34 +470,20 @@ const liveGallery: Gallery = {
   ],
 };
 
-const concertsGallery: Gallery = {
-  id: "concerts",
-  dir: "events",
-  slug: "concerts",
-  count: 0,
-  pad: 2,
-  ratio: WIDESCREEN,
-  wide: [],
-  cols: LANDSCAPE,
-  block: FRAMES_PER_SET,
-};
-
-/* What a set with nothing in it yet says for itself, in one place. */
 export const NO_FRAMES = "No frames published yet";
-
-/* ── pages ────────────────────────────────────────────────────────────── */
 
 export const categories: readonly Category[] = [
   {
-    slug: "real-estate",
+    slug: "realestate",
     label: "Real Estate",
     work: [
       {
         slug: "hotel",
         title: "Hotel & Hospitality",
+        navLabel: "Hotel",
         subtitle: "Guest-facing photography to stand out online.",
         gallery: hotelGallery,
-        cover: 13,
+        cover: 1,
         caseStudy: holidayInnExpress,
         prose: [
           {
@@ -449,9 +504,10 @@ export const categories: readonly Category[] = [
       {
         slug: "motel",
         title: "Motel & Extended Stay",
+        navLabel: "Motel",
         subtitle: "Complete coverage for clarity in booking.",
         gallery: motelGallery,
-        cover: 1,
+        cover: 2,
         caseStudy: riverValleyInn,
         prose: [
           {
@@ -472,6 +528,7 @@ export const categories: readonly Category[] = [
       {
         slug: "commercial",
         title: "Commercial Real Estate",
+        navLabel: "Commercial",
         subtitle: "Architectural coverage for branding or documentation.",
         gallery: commercialGallery,
         cover: 2,
@@ -479,6 +536,7 @@ export const categories: readonly Category[] = [
       {
         slug: "residential",
         title: "Residential Real Estate",
+        navLabel: "Residential",
         subtitle: "For staged homes and residential listings.",
         gallery: residentialGallery,
         cover: 1,
@@ -490,30 +548,38 @@ export const categories: readonly Category[] = [
     label: "Portrait",
     work: [
       {
-        slug: "headshot",
-        title: "Headshots",
-        subtitle: "Standardized portraits for corporate, academic, and professional use.",
-        gallery: headshotGallery,
+        slug: "professional",
+        title: "Professional Portraits",
+        navLabel: "Professional",
+        subtitle:
+          "Portrait photography for personal branding, business profiles, and public-facing presentation.",
+        gallery: professionalGallery,
         cover: 1,
       },
       {
-        slug: "professional",
-        title: "Professional Portraits",
-        subtitle: "Portrait photography for personal branding, business profiles, and public-facing presentation.",
-        gallery: professionalGallery,
+        slug: "headshot",
+        title: "Headshots",
+        navLabel: "Headshot",
+        subtitle:
+          "Standardized portraits for corporate, academic, and professional use.",
+        gallery: headshotGallery,
         cover: 1,
       },
       {
         slug: "lifestyle",
         title: "Lifestyle Portraits",
-        subtitle: "Creative and environmental portraiture emphasizing atmosphere, personality, and styling.",
+        navLabel: "Lifestyle",
+        subtitle:
+          "Creative and environmental portraiture emphasizing atmosphere, personality, and styling.",
         gallery: lifestyleGallery,
         cover: 2,
       },
       {
         slug: "artist",
         title: "Artist Portraits",
-        subtitle: "Press and promotional portraiture for musicians and performers.",
+        navLabel: "Artist",
+        subtitle:
+          "Press and promotional portraiture for musicians and performers.",
         gallery: artistGallery,
       },
     ],
@@ -525,7 +591,9 @@ export const categories: readonly Category[] = [
       {
         slug: "wedding",
         title: "Wedding Photo and Video",
-        subtitle: "Documentary-focused wedding coverage for candid moments, ceremonies, and celebrations.",
+        navLabel: "Wedding",
+        subtitle:
+          "Documentary-focused wedding coverage for candid moments, ceremonies, and celebrations.",
         gallery: weddingGallery,
         cover: 1,
         prose: [
@@ -541,22 +609,24 @@ export const categories: readonly Category[] = [
       },
       {
         slug: "live",
+
         title: "Events",
-        subtitle: "Flexible coverage for live events, gatherings, and functions.",
+        navLabel: "Gatherings",
+        subtitle:
+          "Flexible coverage for live events, gatherings, and functions.",
         gallery: liveGallery,
         cover: 13,
       },
       {
         slug: "concerts",
         title: "Concerts",
+        navLabel: "Music",
         subtitle: "Stage and room coverage for live music. Stills.",
         gallery: concertsGallery,
       },
     ],
   },
 ];
-
-/* ── lookup ───────────────────────────────────────────────────────────── */
 
 export function findCategory(slug: string): Category | undefined {
   return categories.find((category) => category.slug === slug);

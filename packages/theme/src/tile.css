@@ -1,12 +1,3 @@
-/* mosaic + tile — the two primitives every gallery in this family is built
- * from. A mosaic is a fixed-column grid whose row height is derived from the
- * column width and the photographs' aspect ratio, so a 1x1 cell matches the
- * source frame exactly and nothing is cropped to fit the layout.
- *
- * Row height needs the grid's own inline size, and an element cannot be its
- * own query container, so the frame supplies the container and the grid reads
- * it back in cqw. */
-
 .elm-mosaic-frame {
   container-type: inline-size;
   width: 100%;
@@ -27,8 +18,6 @@
   gap: var(--elm-mosaic-gap);
 }
 
-/* Without container queries the derived row height is unavailable; square
-   rows keep the grid intact and the tiles crop rather than collapse. */
 @supports not (container-type: inline-size) {
   .elm-mosaic {
     grid-auto-rows: auto;
@@ -51,14 +40,10 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-/* a tile that navigates rather than opening the frame in place */
 .elm-tile--link {
   cursor: pointer;
 }
 
-/* A cell the grid needs and the set has not filled. Rendered rather than
-   left blank: a hole reads as a layout that broke, a named open slot reads
-   as work still to be shot — which is what it is. */
 .elm-tile--open {
   display: grid;
   place-items: center;
@@ -71,8 +56,7 @@
   padding: 0 var(--elm-space-2);
 
   font-family: var(--elm-font-sans);
-  /* smaller and tighter than an eyebrow: at three columns on a phone the
-     cell is barely a hundred pixels across */
+
   font-size: clamp(7px, 1.5vw, 10px);
   line-height: 1.3;
   letter-spacing: 0.16em;
@@ -151,10 +135,6 @@
   color: var(--elm-ink-dim);
 }
 
-/* Case-study grids run to several hundred frames. Skipping the render work
-   for tiles that are nowhere near the viewport is most of the win, and unlike
-   virtualisation it leaves find-in-page, scroll anchoring and deep links
-   working. */
 .elm-tile--deferred {
   content-visibility: auto;
   contain-intrinsic-size: auto 220px;

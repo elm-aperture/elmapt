@@ -1,11 +1,7 @@
 import { categories } from "../gallery/manifest";
+import { people } from "../site/people";
+import type { Person } from "../site/people";
 import type { CaseStudy, Category, Work } from "../gallery/types";
-
-/* Route resolution.
- *
- * Because the manifest enumerates every gallery, the whole address space of
- * the site is a finite list that can be built once at module load. No pattern
- * matching, no ordering rules, no catch-all that swallows a typo. */
 
 export type Screen =
   | { readonly kind: "home" }
@@ -17,19 +13,31 @@ export type Screen =
       readonly work: Work;
       readonly study: CaseStudy;
     }
+  | { readonly kind: "people" }
+  | { readonly kind: "person"; readonly person: Person }
   | { readonly kind: "missing" }
-  /* one frame while a legacy address is swapped for its new one */
   | { readonly kind: "redirecting" };
+
+const PEOPLE = "/photographers";
 
 const table = new Map<string, Screen>();
 
 table.set("/", { kind: "home" });
+table.set(PEOPLE, { kind: "people" });
+
+for (const person of people) {
+  table.set(`${PEOPLE}/${person.slug}`, { kind: "person", person });
+}
 
 for (const category of categories) {
   table.set(`/${category.slug}`, { kind: "category", category });
 
   for (const work of category.work) {
-    table.set(`/${category.slug}/${work.slug}`, { kind: "work", category, work });
+    table.set(`/${category.slug}/${work.slug}`, {
+      kind: "work",
+      category,
+      work,
+    });
 
     const study = work.caseStudy;
     if (study) {
@@ -43,25 +51,38 @@ for (const category of categories) {
   }
 }
 
-/* The previous site's flat addresses. They are already in people's texts, so
- * they keep working. `/events` is deliberately absent: it used to be the live
- * events gallery and is now the Events category, which is a better landing
- * for that link than a redirect would be. */
-const redirects: Readonly<Record<string, string>> = {
-  "/hotel": "/real-estate/hotel",
-  "/motel": "/real-estate/motel",
-  "/commercial": "/real-estate/commercial",
-  "/residential": "/real-estate/residential",
-  "/hotel-full": "/real-estate/hotel/holiday-inn-express",
-  "/motel-full": "/real-estate/motel/river-valley-inn",
+const flat: Record<string, string> = {
+  "/hotel": "/realestate/hotel",
+  "/motel": "/realestate/motel",
+  "/commercial": "/realestate/commercial",
+  "/residential": "/realestate/residential",
+  "/hotel-full": "/realestate/hotel/holiday-inn-express",
+  "/motel-full": "/realestate/motel/river-valley-inn",
   "/headshot": "/portrait/headshot",
   "/professional": "/portrait/professional",
   "/lifestyle": "/portrait/lifestyle",
   "/wedding": "/events/wedding",
+  "/rain": `${PEOPLE}/rain`,
+  "/maivy": `${PEOPLE}/maivy`,
+  "/alejandro": `${PEOPLE}/alejandro`,
+
+  "/categoryreference": "/realestate",
+
+  "/real-estate": "/realestate",
+  "/real-estate/hotel": "/realestate/hotel",
+  "/real-estate/motel": "/realestate/motel",
+  "/real-estate/commercial": "/realestate/commercial",
+  "/real-estate/residential": "/realestate/residential",
+  "/real-estate/hotel/holiday-inn-express":
+    "/realestate/hotel/holiday-inn-express",
+  "/real-estate/motel/river-valley-inn": "/realestate/motel/river-valley-inn",
 };
 
+const redirects: Readonly<Record<string, string>> = flat;
+
 function normalise(pathname: string): string {
-  if (pathname.length > 1 && pathname.endsWith("/")) return pathname.slice(0, -1);
+  if (pathname.length > 1 && pathname.endsWith("/"))
+    return pathname.slice(0, -1);
   return pathname;
 }
 
@@ -75,6 +96,14 @@ export function resolve(pathname: string): Screen {
 
 export function pathToWork(category: Category, work: Work): string {
   return `/${category.slug}/${work.slug}`;
+}
+
+export function pathToPeople(): string {
+  return PEOPLE;
+}
+
+export function pathToPerson(person: Person): string {
+  return `${PEOPLE}/${person.slug}`;
 }
 
 export function pathToStudy(

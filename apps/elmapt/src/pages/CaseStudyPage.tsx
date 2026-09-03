@@ -20,7 +20,10 @@ export function CaseStudyPage({ category, work, study }: CaseStudyPageProps) {
   return (
     <article className="study">
       <header className="study__head elm-container">
-        <a className="study__back elm-navlink" href={pathToWork(category, work)}>
+        <a
+          className="study__back elm-navlink"
+          href={pathToWork(category, work)}
+        >
           &#8249; {work.title}
         </a>
         <h1 className="study__title elm-display">{study.name}</h1>

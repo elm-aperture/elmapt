@@ -20,6 +20,8 @@ yarn-error.log*
 
 .firebase/
 
-# staged deploy media — rebuilt by media/refresh.sh
 media/img/
 apps/elmapt/public/res
+
+/md/
+*.md

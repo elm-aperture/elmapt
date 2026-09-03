@@ -1,25 +1,10 @@
-# The website. The photographs are not here — they are on Firebase Hosting,
-# and the app is pointed at them by a committed constant in
-# apps/elmapt/vite.config.ts.
-#
-# There is deliberately no VITE_IMG_BASE here. The image host is a public URL
-# that appears in every <img src> the site serves, and Netlify fails any build
-# where a declared environment variable's value shows up in the output. It is
-# not a secret, so it is not a variable.
-
 [build]
-  # Netlify sees pnpm-lock.yaml and runs `pnpm install` at the repo root
-  # before this. To pin the pnpm version, add an exact
-  # "packageManager": "pnpm@x.y.z" to the root package.json — Corepack cannot
-  # take a range.
   command = "pnpm --filter elmapt build"
   publish = "apps/elmapt/dist"
 
 [build.environment]
   NODE_VERSION = "22"
 
-# The router is History-API based: /real-estate/hotel has to be served the app
-# rather than a 404.
 [[redirects]]
   from = "/*"
   to = "/index.html"

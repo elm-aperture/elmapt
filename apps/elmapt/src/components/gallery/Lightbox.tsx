@@ -20,8 +20,7 @@ export function Lightbox({ gallery, frame, onClose, onStep }: LightboxProps) {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const touchStartRef = useRef<number | null>(null);
   const [shown, setShown] = useState(false);
-  /* Which frame's master file has arrived. Keying it by frame rather than
-   * clearing a boolean means changing frames needs no reset pass. */
+
   const [loadedFrame, setLoadedFrame] = useState<number | null>(null);
 
   const open = frame !== null;
@@ -42,7 +41,6 @@ export function Lightbox({ gallery, frame, onClose, onStep }: LightboxProps) {
     }
   }, [open]);
 
-  /* Warm the neighbours so arrowing through a delivery does not stutter. */
   useEffect(() => {
     if (frame === null) return;
 
@@ -62,7 +60,13 @@ export function Lightbox({ gallery, frame, onClose, onStep }: LightboxProps) {
   }, [frame, gallery]);
 
   if (frame === null && !shown) {
-    return <dialog ref={dialogRef} className="elm-lightbox" aria-label="Photograph" />;
+    return (
+      <dialog
+        ref={dialogRef}
+        className="elm-lightbox"
+        aria-label="Photograph"
+      />
+    );
   }
 
   const index = frame ?? 1;
@@ -124,7 +128,11 @@ export function Lightbox({ gallery, frame, onClose, onStep }: LightboxProps) {
           sizes="100vw"
           width={box.width}
           height={box.height}
-          alt={plate ? `${plate.title}${plate.where ? `, ${plate.where}` : ""}` : ""}
+          alt={
+            plate
+              ? `${plate.title}${plate.where ? `, ${plate.where}` : ""}`
+              : ""
+          }
           decoding="async"
           draggable={false}
           onLoad={() => setLoadedFrame(index)}

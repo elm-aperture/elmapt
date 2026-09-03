@@ -15,26 +15,42 @@
     />
     <meta
       name="description"
-      content="Elm Aperture — real estate, portrait, event and music photography in Dallas–Fort Worth."
+      content="Photo and video for real estate, portraits and events in Dallas - Fort Worth."
     />
 
-    <title>Elm Aperture</title>
+    <title>Elm Aperture - Photo &amp; Video</title>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Elm Aperture" />
+    <meta property="og:title" content="Elm Aperture - Photo &amp; Video" />
+    <meta
+      property="og:description"
+      content="Photo and video for real estate, portraits and events in Dallas - Fort Worth."
+    />
+    <meta
+      property="og:image"
+      content="%MEDIA_BASE%/carousel/homepage_01.webp"
+    />
+    <meta property="og:image:type" content="image/webp" />
+    <meta property="og:image:width" content="1920" />
+    <meta property="og:image:height" content="1280" />
+    <meta
+      property="og:image:alt"
+      content="Portrait of a woman in a black dress seated among dense foliage and orchids."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- One stylesheet request for both families. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <!-- The media host, when the photographs are not served from here. -->
     %MEDIA_PRECONNECT%
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500&family=Libre+Caslon+Text:ital,wght@0,400;1,400&display=swap"
     />
 
-    <!-- The hero is the page. Start it before the bundle parses.
-         %MEDIA_BASE% is substituted at build time — see vite.config.ts. -->
     <link
       rel="preload"
       as="image"

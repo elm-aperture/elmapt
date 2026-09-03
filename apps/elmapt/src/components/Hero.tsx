@@ -14,8 +14,6 @@ type ImageVars = CSSProperties & {
 
 const frames = site.hero.frames;
 
-/* Where a frame sits in the stack. Only the arriving one animates; the one
- * it is covering holds, and everything behind that is simply out. */
 type Layer = "in" | "under" | "out";
 
 type FrameProps = {
@@ -23,17 +21,12 @@ type FrameProps = {
   index: number;
   layer: Layer;
   lead: boolean;
-  /* True only for the very first frame's arrival, when it is dissolving up
-   * out of the backdrop rather than off a previous photograph — that fade
-   * gets its own, shorter duration in hero.css. */
+
   debut: boolean;
   settle: (index: number) => void;
 };
 
 function HeroFrame({ frame, index, layer, lead, debut, settle }: FrameProps) {
-  /* A cached image can finish before React attaches onLoad, which would
-   * strand the frame at zero and stall the rotation behind it. Check the
-   * element the moment we get it. */
   const capture = useCallback(
     (node: HTMLImageElement | null) => {
       if (node?.complete) settle(index);
@@ -72,7 +65,9 @@ function HeroChevron({
       type="button"
       className={`hero__nav hero__nav--${direction}`}
       onClick={onClick}
-      aria-label={direction === "prev" ? "Previous photograph" : "Next photograph"}
+      aria-label={
+        direction === "prev" ? "Previous photograph" : "Next photograph"
+      }
     >
       <svg
         viewBox="0 0 24 24"
@@ -98,14 +93,8 @@ export function Hero() {
     frames.length,
   );
 
-  /* One photograph, nothing to move between — the chevrons only earn their
-   * place once there is a next and a previous to go to. */
   const canNavigate = armed && frames.length > 1;
 
-  /* Left/Right steps the carousel from anywhere on the page. This calls
-   * step() directly rather than clicking or focusing a chevron, so the
-   * keyboard shortcut never leaves the button wearing a focus ring — only
-   * actually tabbing to one does that. */
   useEffect(() => {
     if (!canNavigate) return;
 
@@ -130,13 +119,8 @@ export function Hero() {
       style={{ "--hero-backdrop": site.hero.backdrop } as FrameVars}
     >
       {frames.map((frame, index) => {
-        /* Nothing but the first frame exists until the first frame has
-         * arrived — four more photographs must not slow down the one the
-         * page is measured by. */
         if (index !== 0 && !armed) return null;
 
-        /* A frame is only promoted once it can actually be seen. Showing an
-         * undecoded image would fade up a hole. */
         const layer: Layer =
           index === current && settled.has(index)
             ? "in"

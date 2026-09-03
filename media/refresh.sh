@@ -1,11 +1,4 @@
 #!/usr/bin/env bash
-# Rebuild media/img from the source set.
-#
-# Everything is copied straight across except files over 2 MB, which are
-# unprocessed originals; those are re-encoded to 1920px wide, which is the
-# convention the whole set already follows — 1920x1280 landscape, 1920x2880
-# upright. See README.md for why that matters.
-
 set -euo pipefail
 
 SRC="${1:-$HOME/Documents/WebDev/elmaptbak/elmapt/public/res/img}"

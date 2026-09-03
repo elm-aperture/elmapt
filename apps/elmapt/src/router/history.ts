@@ -1,14 +1,3 @@
-/* A router, in about a hundred lines.
- *
- * Every address on this site is enumerable from the gallery manifest, so
- * there is no pattern language to parse and no match ranking to get wrong —
- * see routes.ts. What is left is the part a photo site actually cares about:
- * intercepting same-origin links, and putting the reader back exactly where
- * they were when they press Back out of a three-hundred-frame delivery.
- *
- * Scroll positions are stored on the history entries themselves, so they
- * survive a reload and never leak between two entries for the same path. */
-
 type Listener = () => void;
 
 type EntryState = {
@@ -36,8 +25,6 @@ function entryState(): EntryState | null {
   return (window.history.state as EntryState | null) ?? null;
 }
 
-/* Stamp the outgoing entry with where the reader had scrolled to, so popping
- * back to it can restore the position. */
 function rememberScroll(): void {
   const current = entryState();
   window.history.replaceState(
@@ -59,7 +46,7 @@ export function getSnapshot(): string {
 
 export type NavigateOptions = {
   readonly replace?: boolean;
-  /* defaults to true for a new path, false for a hash change on the same page */
+
   readonly scroll?: boolean;
 };
 
@@ -90,7 +77,6 @@ export function navigate(to: string, options: NavigateOptions = {}): void {
 }
 
 export function startHistory(): () => void {
-  /* The browser's own restoration races a client-rendered page and loses. */
   if ("scrollRestoration" in window.history) {
     window.history.scrollRestoration = "manual";
   }
@@ -99,8 +85,6 @@ export function startHistory(): () => void {
     const y = entryState()?.y ?? 0;
     publish();
 
-    /* Wait a frame so the incoming screen has committed before we move the
-     * viewport onto it. An entry carrying a hash is the lightbox's business. */
     if (!window.location.hash) {
       requestAnimationFrame(() => window.scrollTo(0, y));
     }
@@ -110,13 +94,11 @@ export function startHistory(): () => void {
   return () => window.removeEventListener("popstate", onPop);
 }
 
-/* Same-origin anchors become client navigations. Anything a reader might
- * reasonably expect to leave the app — new tab, download, modifier-click,
- * another origin, a mailto: — is left to the browser. */
 export function startLinkCapture(): () => void {
   const onClick = (event: MouseEvent) => {
     if (event.defaultPrevented || event.button !== 0) return;
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey)
+      return;
 
     const target = event.target;
     if (!(target instanceof Element)) return;

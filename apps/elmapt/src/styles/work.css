@@ -25,7 +25,9 @@
 
 .work__set,
 .study__set {
-  padding-bottom: clamp(24px, 4vw, 56px);
+  --elm-measure: 1720px;
+
+  padding-bottom: clamp(24px, 3vw, 32px);
 }
 
 .prose__body {
@@ -41,12 +43,6 @@
   border-radius: var(--elm-radius-md);
   border: 1px solid var(--elm-line-soft);
 }
-
-/* ── category index ───────────────────────────────────────────────────── */
-
-/* One door per body of work. Two columns of widescreen frames, three of
-   upright ones — enough that each is worth looking at, few enough that the
-   page reads as a choice rather than as a gallery. */
 
 .chooser {
   --chooser-cols: 2;

@@ -1,24 +1,22 @@
-import { useState } from "react";
+import { useCallback } from "react";
 import type { CSSProperties } from "react";
-import type { Gallery, Plate } from "../../gallery/types";
+import type { Gallery, Plate, Span } from "../../gallery/types";
 import { intrinsic, srcSetFor, thumbSrc } from "../../gallery/sources";
 import { sizesFor, spanFor } from "../../gallery/mosaic";
-
-/* One cell of a mosaic.
- *
- * The cell's span decides both how much grid it occupies and what goes in
- * `sizes`, so the browser is told the truth about the drawn width and picks
- * the right rung on its own. Nothing here hard-codes which frames are large. */
+import { useLoaded } from "../../hooks/useLoaded";
 
 type TileProps = {
   gallery: Gallery;
   frame: number;
   plate?: Plate;
-  /* an anchor when the tile leads somewhere, a button when it opens the frame */
+
   href?: string;
   onOpen?: (frame: number) => void;
   eager?: boolean;
   deferred?: boolean;
+
+  hold?: boolean;
+  onSettled?: (frame: number) => void;
 };
 
 export function Tile({
@@ -29,35 +27,47 @@ export function Tile({
   onOpen,
   eager = false,
   deferred = false,
+  hold = false,
+  onSettled,
 }: TileProps) {
-  const [loaded, setLoaded] = useState(false);
+  const settled = useCallback(() => onSettled?.(frame), [onSettled, frame]);
+  const { loaded, capture, onLoad, onError } = useLoaded(settled);
   const span = spanFor(gallery, frame);
+  const [cols, rows] = span;
   const box = intrinsic(gallery);
 
   const style: CSSProperties = {
-    gridColumn: `span ${span}`,
-    gridRow: `span ${span}`,
+    gridColumn: `span ${cols}`,
+    gridRow: `span ${rows}`,
   };
 
-  const className = ["elm-tile", deferred ? "elm-tile--deferred" : ""]
+  const className = [
+    "elm-tile",
+    loaded ? "" : "elm-skeleton",
+    deferred ? "elm-tile--deferred" : "",
+  ]
     .filter(Boolean)
     .join(" ");
 
   const inner = (
     <>
       <img
+        ref={capture}
         className={`elm-tile__img${loaded ? " is-loaded" : ""}`}
-        src={thumbSrc(gallery, frame)}
-        srcSet={srcSetFor(gallery, frame)}
+        src={hold ? undefined : thumbSrc(gallery, frame)}
+        srcSet={hold ? undefined : srcSetFor(gallery, frame)}
         sizes={sizesFor(gallery, span)}
         width={box.width}
         height={box.height}
-        alt={plate ? `${plate.title}${plate.where ? `, ${plate.where}` : ""}` : ""}
+        alt={
+          plate ? `${plate.title}${plate.where ? `, ${plate.where}` : ""}` : ""
+        }
         loading={eager ? "eager" : "lazy"}
         fetchPriority={eager ? "high" : "auto"}
         decoding="async"
         draggable={false}
-        onLoad={() => setLoaded(true)}
+        onLoad={onLoad}
+        onError={onError}
       />
 
       {plate ? (
@@ -92,10 +102,10 @@ export function Tile({
   );
 }
 
-export function OpenFrame({ span = 1 }: { span?: number }) {
+export function OpenFrame({ span = [1, 1] }: { span?: Span }) {
   const style: CSSProperties = {
-    gridColumn: `span ${span}`,
-    gridRow: `span ${span}`,
+    gridColumn: `span ${span[0]}`,
+    gridRow: `span ${span[1]}`,
   };
 
   return (

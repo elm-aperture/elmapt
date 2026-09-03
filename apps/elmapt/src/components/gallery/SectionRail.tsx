@@ -5,7 +5,6 @@ type SectionRailProps = {
   sections: Readonly<Record<number, string>>;
 };
 
-/* how far down the viewport a heading counts as "the one being read" */
 const READING_LINE = 140;
 
 export function SectionRail({ sections }: SectionRailProps) {
@@ -26,8 +25,6 @@ export function SectionRail({ sections }: SectionRailProps) {
 
     let queued = false;
 
-    /* A dozen headings is cheap enough to measure directly, and reading the
-     * positions beats inferring them from intersection ratios. */
     const measure = () => {
       queued = false;
       let current = entries[0].frame;

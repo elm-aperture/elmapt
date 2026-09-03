@@ -16,10 +16,6 @@
   padding-top: calc(var(--elm-space-3) + env(safe-area-inset-top));
 }
 
-/* Kills the mobile blue tap-flash, the mouse-click focus ring, and the blue
-   text-selection box a click-drag across the nav would otherwise paint;
-   keyboard focus (:focus-visible) is left untouched so tabbing through the
-   nav still shows a ring. */
 .nav__mark,
 .elm-navlink {
   -webkit-tap-highlight-color: transparent;
@@ -45,7 +41,16 @@
 .nav__links {
   display: flex;
   align-items: center;
-  gap: clamp(14px, 2.4vw, 34px);
+
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px clamp(14px, 2.4vw, 34px);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav__links .elm-navlink {
+    color: var(--elm-ink-soft);
+  }
 }
 
 @media (max-width: 640px) {
@@ -56,6 +61,104 @@
   }
 
   .nav__links {
-    gap: clamp(12px, 4.4vw, 24px);
+    gap: 7px clamp(12px, 4.4vw, 24px);
+  }
+}
+
+.nav__item {
+  display: contents;
+}
+
+.nav__trigger {
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.nav__trigger[aria-expanded="true"] {
+  color: var(--elm-ink);
+}
+
+.nav__menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  animation: nav-menu-in var(--elm-dur-2) var(--elm-ease) backwards;
+}
+
+.nav__menulist {
+  --elm-glass-tint: #090c12e0;
+  --elm-glass-blur: 22px;
+  --elm-glass-saturate: 150%;
+
+  position: absolute;
+  left: var(--menu-anchor, 50%);
+  transform: translateX(-50%);
+  width: max-content;
+  min-width: 152px;
+
+  max-width: min(224px, 88vw);
+
+  display: flex;
+  flex-direction: column;
+  margin-top: 7px;
+  padding: var(--elm-space-2);
+  border-radius: var(--elm-radius-md);
+}
+
+.nav__menulist::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 7px;
+}
+
+.nav__menulink {
+  display: block;
+  padding: 9px var(--elm-space-3);
+  border-radius: var(--elm-radius-sm);
+  white-space: nowrap;
+
+  font-family: var(--elm-font-sans);
+  font-size: var(--elm-text-sm);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: var(--elm-track-normal);
+  color: var(--elm-ink-dim);
+
+  transition: color var(--elm-dur-2) var(--elm-ease);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav__menulink:hover,
+.nav__menulink[aria-current="page"] {
+  color: var(--elm-ink);
+  background-color: rgba(241, 243, 247, 0.06);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nav__menulink {
+    color: var(--elm-ink-soft);
+    font-size: var(--elm-text-md);
+  }
+}
+
+.nav__menulink:focus:not(:focus-visible) {
+  outline: none;
+}
+
+@keyframes nav-menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav__menu {
+    animation: none;
   }
 }

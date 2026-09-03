@@ -10,7 +10,13 @@ import { NO_FRAMES } from "../gallery/manifest";
 import type { Category, Work } from "../gallery/types";
 import "../styles/work.css";
 
-export function WorkPage({ category, work }: { category: Category; work: Work }) {
+export function WorkPage({
+  category,
+  work,
+}: {
+  category: Category;
+  work: Work;
+}) {
   const { frame, open, close, step } = useLightbox(work.gallery.count);
   useScrollLock(frame !== null);
 

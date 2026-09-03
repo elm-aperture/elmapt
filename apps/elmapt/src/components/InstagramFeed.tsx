@@ -3,20 +3,11 @@ import { SectionHead } from "./SectionHead";
 import { useReveal } from "../hooks/useReveal";
 import "../styles/feed.css";
 
-/* The element is created imperatively because it is a web component: React
- * owns the empty host div, this effect owns everything inside it, and the two
- * never write to the same nodes. That is the opposite of reaching into a
- * React-rendered tree from outside. */
-
 const WIDGET_SRC = "https://w.behold.so/widget.js";
 const WIDGET_TAG = "behold-widget";
 
-/* how long to wait before deciding the widget is never arriving */
 const GIVE_UP_MS = 8000;
 
-/* Placeholder tiles held while the feed loads. Twelve divides evenly by every
- * column count the grid resolves to, so the holding pattern never ends on a
- * ragged row. */
 const SKELETON_TILES = 12;
 
 type FeedState = "loading" | "ready" | "failed";
@@ -64,9 +55,6 @@ export function InstagramFeed({
     const onScriptError = () => settle("failed");
     script?.addEventListener("error", onScriptError);
 
-    /* If the element upgraded, the feed is live even when the load event was
-     * missed. If it never upgraded, the script is gone and the whole section
-     * should go with it — a broken embed is worse than no embed. */
     const giveUp = window.setTimeout(() => {
       settle(customElements.get(WIDGET_TAG) ? "ready" : "failed");
     }, GIVE_UP_MS);

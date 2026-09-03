@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
+import { UNATTRIBUTED } from "../../gallery/types";
 import type { Gallery } from "../../gallery/types";
 import { runLength, spanFor } from "../../gallery/mosaic";
 import { OpenFrame, Tile } from "./Tile";
@@ -14,15 +15,15 @@ type MosaicVars = CSSProperties & {
 
 type MosaicProps = {
   gallery: Gallery;
-  /* 1-based frames to render; defaults to the whole set */
+
   frames?: readonly number[];
-  /* sparse frame -> label; each label starts a new run */
+
   sections?: Readonly<Record<number, string>>;
   onOpen?: (frame: number) => void;
   linkFor?: (frame: number) => string;
-  /* leading frames that skip lazy-loading; roughly the first row */
+
   eagerCount?: number;
-  /* skip render work for offscreen cells — for sets in the hundreds */
+
   deferred?: boolean;
 };
 
@@ -63,6 +64,32 @@ export function Mosaic({
     return out;
   }, [list, sections]);
 
+  const filler = useMemo(() => {
+    const plates = gallery.plates;
+    if (!plates) return null;
+    const held = new Set(
+      list.filter((f) => plates[f - 1]?.by === UNATTRIBUTED),
+    );
+    return held.size > 0 && held.size < list.length ? held : null;
+  }, [list, gallery.plates]);
+
+  const realCount = filler ? list.length - filler.size : 0;
+  const [settledReal, setSettledReal] = useState<ReadonlySet<number>>(
+    () => new Set(),
+  );
+
+  const onSettled = useCallback(
+    (frame: number) => {
+      if (!filler || filler.has(frame)) return;
+      setSettledReal((done) =>
+        done.has(frame) ? done : new Set(done).add(frame),
+      );
+    },
+    [filler],
+  );
+
+  const holding = filler !== null && settledReal.size < realCount;
+
   const [wide, mid, narrow] = gallery.cols;
 
   const style: MosaicVars = {
@@ -89,7 +116,7 @@ export function Mosaic({
 
           return (
             <Tile
-              key={frame}
+              key={`${gallery.id}-${frame}`}
               gallery={gallery}
               frame={frame}
               plate={gallery.plates?.[frame - 1]}
@@ -97,14 +124,15 @@ export function Mosaic({
               onOpen={onOpen}
               eager={eager}
               deferred={deferred && !eager}
+              hold={holding && (filler?.has(frame) ?? false)}
+              onSettled={onSettled}
             />
           );
         });
 
-        /* The positions between the last photograph and the end of the block.
-         * Numbering carries on from the run so a hero slot keeps its width. */
         const last = run.frames[run.frames.length - 1] ?? 0;
-        const openCount = runLength(gallery.block, run.frames.length) - run.frames.length;
+        const openCount =
+          runLength(gallery.block, run.frames.length) - run.frames.length;
 
         return (
           <section className="mosaic__run" key={run.key}>
@@ -113,7 +141,12 @@ export function Mosaic({
               {cells}
               {Array.from({ length: openCount }, (_, index) => {
                 const at = last + index + 1;
-                return <OpenFrame key={`open-${at}`} span={spanFor(gallery, at)} />;
+                return (
+                  <OpenFrame
+                    key={`${gallery.id}-open-${at}`}
+                    span={spanFor(gallery, at)}
+                  />
+                );
               })}
             </div>
           </section>

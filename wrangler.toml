@@ -1,11 +1,2 @@
-# The website, on Cloudflare Pages, built from GitHub on push.
-#
-# The photographs are not here. They are a second Pages project, deployed by
-# hand from this machine, and the app is pointed at them by MEDIA_HOST in
-# apps/elmapt/vite.config.ts.
-#
-# Build command and Node version are set in the Pages dashboard; this file
-# only declares where the build output lands.
-
 name = "elmapt"
 pages_build_output_dir = "apps/elmapt/dist"

@@ -1,5 +1,3 @@
-/* layout — page rhythm. Deliberately thin: this system is mostly whitespace. */
-
 .elm-page {
   position: relative;
   z-index: var(--elm-z-content);

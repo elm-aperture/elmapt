@@ -1,9 +1,3 @@
-/* ambient — the slow radial field the whole family sits on.
- *
- * Rendered as an explicit element rather than body::before so an app can
- * place it, omit it, or run two of them. Positions are custom properties so
- * JS can drift them without touching the paint description. */
-
 .elm-ambient {
   position: fixed;
   inset: 0;
@@ -28,7 +22,6 @@
     );
 }
 
-/* corner fall-off. Keeps photographs from bleeding into the browser chrome. */
 .elm-ambient::after {
   content: "";
   position: absolute;
