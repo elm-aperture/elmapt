@@ -41,6 +41,7 @@ export function CaseStudyPage({ category, work, study }: CaseStudyPageProps) {
           sections={study.sections}
           onOpen={open}
           deferred
+          ragged
         />
       </div>
 

@@ -28,6 +28,30 @@
   }
 }
 
+/* A mosaic that lets its last row run short instead of padding it out with
+ * filler cells to a full block — for a gallery where the true count matters
+ * (a case study's delivered frames) rather than a fixed showcase quota.
+ * CSS Grid has no way to centre a ragged final row of an explicit N-column
+ * track list, so this falls back to flex-wrap, whose per-line
+ * justify-content handles it for free regardless of how many cells end up
+ * in that last line. Every mosaic that opts into this has no wide/tall
+ * spans (an empty `spans` map) — plain uniform cells only — so the two
+ * layouts are visually identical apart from the last row's alignment. */
+.elm-mosaic--ragged {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.elm-mosaic--ragged .elm-tile {
+  flex: 0 0
+    calc(
+      (100% - (var(--elm-mosaic-cols) - 1) * var(--elm-mosaic-gap)) /
+        var(--elm-mosaic-cols)
+    );
+  aspect-ratio: var(--elm-mosaic-ratio);
+}
+
 .elm-tile {
   position: relative;
   overflow: hidden;
