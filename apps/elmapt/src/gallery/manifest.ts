@@ -58,7 +58,7 @@ const RESIDENTIAL_SPANS: Readonly<Record<number, Span>> = {
   12: L,
 };
 
-const REAL_ESTATE_MID = false;
+const REAL_ESTATE_MID = true;
 
 const hotelGallery: Gallery = {
   id: "hotel",
@@ -280,6 +280,7 @@ const headshotGallery: Gallery = {
 
   // Best to worst.
   order: [22, 8, 4, 5, 21, 19, 3, 2, 20, 6, 9, 1, 7, 14, 15, 16, 17, 18],
+  mid: true,
   pad: 2,
   ratio: UPRIGHT_RATIO,
   spans: {},
@@ -314,6 +315,7 @@ const professionalGallery: Gallery = {
   count: FRAMES_PER_SET,
   // Best to worst.
   order: [1, 20, 8, 21, 19, 3, 5, 4, 6, 2, 7, 12, 13, 14, 15, 16, 17, 18],
+  mid: true,
   pad: 2,
   ratio: UPRIGHT_RATIO,
   spans: {},
@@ -345,6 +347,7 @@ const lifestyleGallery: Gallery = {
   slug: "lifestyle",
   count: FRAMES_PER_SET,
   order: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 19, 20, 18],
+  mid: true,
   pad: 2,
   ratio: UPRIGHT_RATIO,
   spans: {},
@@ -417,6 +420,7 @@ const concertsGallery: Gallery = {
   dir: "events",
   slug: "concerts",
   count: 3,
+  mid: true,
   pad: 2,
   ratio: WIDESCREEN,
   spans: CONCERTS_SPANS,
@@ -443,6 +447,7 @@ const weddingGallery: Gallery = {
     11: "50% 36%",
     12: "50% 34%",
   },
+  mid: true,
   pad: 2,
   ratio: WIDESCREEN,
   spans: WEDDING_SPANS,
@@ -482,6 +487,7 @@ const liveGallery: Gallery = {
   count: 18,
 
   order: [4, 10, 3, 11, 12, 17, 7, 9, 18, 15, 2, 8, 6, 14, 1, 13, 5, 16],
+  mid: true,
   pad: 2,
   ratio: WIDESCREEN,
   spans: LIVE_SPANS,

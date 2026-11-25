@@ -4,6 +4,11 @@ import { site } from "../site/site";
 import { useCarousel } from "../hooks/useCarousel";
 import "../styles/hero.css";
 
+/* Carousel frames ship at 960, 1440 and 1920 wide (the 1920 is the bare name). */
+const heroSrcSet = (src: string) =>
+  `${src.replace(/\.webp$/, "_960.webp")} 960w, ${src.replace(/\.webp$/, "_1440.webp")} 1440w, ${src} 1920w`;
+
+
 type FrameVars = CSSProperties & {
   "--hero-backdrop"?: string;
 };
@@ -40,6 +45,8 @@ function HeroFrame({ frame, index, layer, lead, debut, settle }: FrameProps) {
       className={`hero__img hero__img--${layer}${debut ? " hero__img--debut" : ""}`}
       style={{ "--hero-focus": frame.focus } as ImageVars}
       src={frame.src}
+      srcSet={heroSrcSet(frame.src)}
+      sizes="100vw"
       alt={frame.alt}
       width={site.hero.width}
       height={site.hero.height}
@@ -114,7 +121,7 @@ export function Hero() {
 
   return (
     <section
-      className="hero"
+      className={`hero${armed ? "" : " elm-skeleton"}`}
       aria-label={site.name}
       style={{ "--hero-backdrop": site.hero.backdrop } as FrameVars}
     >

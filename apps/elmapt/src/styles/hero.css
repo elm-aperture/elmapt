@@ -194,3 +194,10 @@ body:has(.sheet__pane:not([inert])) .hero__cta {
   background-color: rgba(6, 9, 14, 0.75);
 }
 
+
+/* Full-bleed shimmer while the lead frame loads. */
+.hero.elm-skeleton {
+  border-radius: 0;
+  box-shadow: none;
+  background-color: var(--hero-backdrop);
+}

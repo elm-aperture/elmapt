@@ -7,7 +7,8 @@ import { pathToWork } from "../router/routes";
 import type { Category } from "../gallery/types";
 import "../styles/tiles.css";
 
-const SIZES = "(min-width: 760px) 33vw, 92vw";
+// Three tiles across at every width, inside a column capped at 1240px.
+const SIZES = "(min-width: 1416px) 400px, 31vw";
 
 /** Which photo fronts each category's tile, by work and source frame, and
  * where to centre the crop. A category without a pick uses its first
