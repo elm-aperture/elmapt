@@ -1,5 +1,6 @@
+import { memo } from "react";
 import { Hero } from "../components/Hero";
 
-export function HomePage() {
+export const HomePage = memo(function HomePage() {
   return <Hero />;
-}
+});

@@ -3,6 +3,26 @@ import { resUrl } from "../gallery/sources";
 export const site = {
   name: "Elm Aperture",
 
+  /** Canonical origin. Used for canonical links, the sitemap and share cards. */
+  url: "https://elmapt.com",
+  area: "Dallas–Fort Worth",
+  description:
+    "Photo and video for real estate, portraits and events in Dallas–Fort Worth.",
+  founded: 2019,
+
+  contact: {
+    email: "rain@elmapt.com",
+    phone: "469.620.0579",
+    tel: "+14696200579",
+    reply: "Replies same day.",
+  },
+
+  /** The home page's headline, over the hero. */
+  headline: {
+    title: "Photo & video in Dallas–Fort Worth",
+    line: "Homes, hotels, people and events.",
+  },
+
   hero: {
     width: 1920,
     height: 1280,
@@ -39,15 +59,12 @@ export const site = {
   },
 
   booking: {
-    label: "Book a shoot",
+    label: "Book a free consultation",
     href: "/booking",
   },
 
   instagram: {
     href: "https://instagram.com/elm_aperture",
-  },
-
-  youtube: {
-    href: "#",
+    feed: "yh5fXOj29q5dsG731Dtb",
   },
 } as const;

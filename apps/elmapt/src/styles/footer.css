@@ -63,6 +63,29 @@
   color: var(--elm-ink-soft);
 }
 
+.footer__chev {
+  width: 18px;
+  height: 18px;
+  color: var(--elm-ink-dim);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .footer__chev {
+    animation: footer-nudge 2.4s var(--elm-ease) infinite;
+  }
+}
+
+@keyframes footer-nudge {
+  0%,
+  60%,
+  100% {
+    transform: none;
+  }
+  30% {
+    transform: translateY(-3px);
+  }
+}
+
 .footer__amp {
   font-size: 0.8em;
   vertical-align: 0.09em;

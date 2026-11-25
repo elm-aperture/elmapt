@@ -100,3 +100,97 @@
 .hero__nav--next {
   right: calc(var(--elm-space-2) + env(safe-area-inset-right));
 }
+
+/* Headline and calls to action, clear of the About notch at the bottom edge. */
+.hero__cta {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: calc(var(--notch-w) / 2 + clamp(16px, 3vh, 32px));
+  transform: translateX(-50%);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--elm-space-3);
+  width: max-content;
+  max-width: calc(100% - 2 * var(--elm-gutter));
+  text-align: center;
+  transition:
+    opacity var(--elm-dur-2) var(--elm-ease),
+    visibility var(--elm-dur-2);
+}
+
+/* Hidden while the About sheet is open: the sheet is glass, and the copy
+ * would show through it. */
+body:has(.sheet__pane:not([inert])) .hero__cta {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* A soft dark band behind the copy so it reads over any photo. */
+.hero__shade {
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0;
+  height: 65%;
+  background: linear-gradient(
+    to top,
+    rgba(4, 6, 9, 0.88) 0%,
+    rgba(4, 6, 9, 0.6) 45%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.hero__title {
+  margin: 0;
+  font-size: clamp(22px, 2.8vw, 38px);
+  color: var(--elm-ink);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
+  text-wrap: balance;
+}
+
+.hero__line {
+  margin: 0 0 var(--elm-space-3);
+  color: var(--elm-ink-soft);
+  font-size: clamp(14px, 1.6vw, 18px);
+  font-weight: 300;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--elm-space-3);
+}
+
+.hero__call {
+  margin: var(--elm-space-1) 0 0;
+  color: var(--elm-ink-dim);
+  font-size: var(--elm-text-sm);
+  font-weight: 300;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+}
+
+.hero__call a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+
+.hero__book {
+  background-color: rgba(6, 9, 14, 0.55);
+  border-color: rgba(241, 243, 247, 0.22);
+  color: var(--elm-ink);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.hero__book:hover {
+  background-color: rgba(6, 9, 14, 0.75);
+}
+

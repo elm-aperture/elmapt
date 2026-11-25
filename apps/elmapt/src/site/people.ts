@@ -47,7 +47,7 @@ export const people: readonly Person[] = [
     bio:
       "With ten years' experience in photos and video, i've helped businesses " +
       "and individuals achieve their branding, marketing, and internal goals. " +
-      "I believe photography can be a way to express identity and purpose — so " +
+      "I believe photography can be a way to express identity and purpose – so " +
       "i shoot everything from models to hotels to testimonials with this in " +
       "mind. My works tend to chase strong colour with even lighting and an " +
       "emphasis on balance.",
@@ -63,6 +63,33 @@ export const people: readonly Person[] = [
       { label: "469.620.0579", href: "tel:+14696200579" },
     ],
     feed: "53ACNRUgJYRQEQ2FmFSt",
+  },
+  {
+    name: "Alejandro",
+    slug: "alejandro",
+    role: "Lead videographer",
+    bio:
+      "A Dallas-based photographer and videographer obsessed with color, " +
+      "atmosphere, and storytelling, whose style blends cinematic lighting " +
+      "with expressive portraiture to create images that feel alive. Artists, " +
+      "brands, and everyday people – if there's a story to tell, I'm there to " +
+      "capture it.",
+    portrait: {
+      ...portrait("alejandro", 333, 1620),
+      focus: "50% 18%",
+      alt: "Alejandro with arms folded in front of a shimmering beaded curtain.",
+    },
+    links: [
+      {
+        label: "@navalabs_official",
+        href: "https://instagram.com/navalabs_official",
+      },
+      {
+        label: "alexnavarro1127@gmail.com",
+        href: "mailto:alexnavarro1127@gmail.com",
+      },
+    ],
+    feed: "mdRZb8imZd5bJhCJUgKk",
   },
   {
     name: "Maivy",
@@ -88,33 +115,6 @@ export const people: readonly Person[] = [
         href: "mailto:kimirius1999@gmail.com",
       },
     ],
-  },
-  {
-    name: "Alejandro",
-    slug: "alejandro",
-    role: "Lead videographer",
-    bio:
-      "A Dallas-based photographer and videographer obsessed with color, " +
-      "atmosphere, and storytelling, whose style blends cinematic lighting " +
-      "with expressive portraiture to create images that feel alive. Artists, " +
-      "brands, and everyday people — if there's a story to tell, I'm there to " +
-      "capture it.",
-    portrait: {
-      ...portrait("alejandro", 333, 1620),
-      focus: "50% 18%",
-      alt: "Alejandro with arms folded in front of a shimmering beaded curtain.",
-    },
-    links: [
-      {
-        label: "@navalabs_official",
-        href: "https://instagram.com/navalabs_official",
-      },
-      {
-        label: "alexnavarro1127@gmail.com",
-        href: "mailto:alexnavarro1127@gmail.com",
-      },
-    ],
-    feed: "mdRZb8imZd5bJhCJUgKk",
   },
 ];
 

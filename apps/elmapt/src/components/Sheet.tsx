@@ -1,6 +1,11 @@
 import { useLayoutEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { Footer } from "./Footer";
+import { About, AboutClose, AboutFaq, AboutProcess, AboutStats } from "./About";
+import { PeopleBands } from "./PeopleBands";
+import { ServiceTiles } from "./ServiceTiles";
+import { HomeFeed } from "./HomeFeed";
+import { SiteFooter } from "./SiteFooter";
 import type { SheetState } from "../hooks/useSheet";
 import "../styles/sheet.css";
 
@@ -81,33 +86,25 @@ export function Sheet({ sheet }: { sheet: SheetState }) {
         <section
           ref={pane}
           className="sheet__pane"
-          aria-hidden={!open}
+          inert={!open}
           aria-label="About Elm Aperture"
         >
+          <ServiceTiles />
+
           <div className="sheet__inner">
             <h2 className="sheet__title elm-display">About</h2>
 
-            <p className="elm-body">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
-
-            <p className="elm-body">
-              Duis aute irure dolor in reprehenderit in voluptate velit esse
-              cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-              cupidatat non proident, sunt in culpa qui officia deserunt mollit
-              anim id est laborum.
-            </p>
-
-            <p className="elm-body">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-              accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-              quae ab illo inventore veritatis et quasi architecto beatae vitae
-              dicta sunt explicabo.
-            </p>
+            <About />
           </div>
+
+          <AboutStats />
+          <AboutProcess />
+          <PeopleBands />
+          <AboutFaq />
+          <HomeFeed />
+          <AboutClose />
+
+          <SiteFooter />
         </section>
       </div>
     </div>

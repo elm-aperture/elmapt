@@ -5,7 +5,8 @@ import { CaseStudyCard } from "../components/gallery/CaseStudyCard";
 import { FigureSection, ProseSection } from "../components/Prose";
 import { useLightbox } from "../hooks/useLightbox";
 import { useScrollLock } from "../hooks/useScrollLock";
-import { pathToStudy } from "../router/routes";
+import { pathToBookingFor, pathToStudy } from "../router/routes";
+import { GalleryCta } from "../components/GalleryCta";
 import { NO_FRAMES } from "../gallery/manifest";
 import type { Category, Work } from "../gallery/types";
 import "../styles/work.css";
@@ -36,6 +37,10 @@ export function WorkPage({
         <div className="work__set elm-container">
           <Mosaic gallery={work.gallery} onOpen={open} />
         </div>
+      )}
+
+      {work.gallery.count === 0 ? null : (
+        <GalleryCta href={pathToBookingFor(work)} />
       )}
 
       {lead ? <ProseSection {...lead} /> : null}

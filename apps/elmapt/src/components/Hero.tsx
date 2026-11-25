@@ -147,6 +147,24 @@ export function Hero() {
           <HeroChevron direction="next" onClick={() => step(1)} />
         </>
       )}
+
+      <div className="hero__shade" aria-hidden="true" />
+
+      <div className="hero__cta">
+        <h1 className="hero__title elm-display">{site.headline.title}</h1>
+        <p className="hero__line">{site.headline.line}</p>
+
+        <div className="hero__actions">
+          <a className="elm-btn hero__book" href={site.booking.href}>
+            {site.booking.label}
+          </a>
+        </div>
+
+        <p className="hero__call">
+          Or call or text{" "}
+          <a href={`tel:${site.contact.tel}`}>{site.contact.phone}</a>
+        </p>
+      </div>
     </section>
   );
 }

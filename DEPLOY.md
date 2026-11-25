@@ -1,6 +1,6 @@
 # Deploying Elm Aperture
 
-Two Cloudflare Pages projects, split along the only line that matters — how
+Two Cloudflare Pages projects, split along the only line that matters – how
 big the thing is and how often it changes.
 
 | | Project | Deployed from | Size |
@@ -14,12 +14,12 @@ No app, no index, no HTML. The website reaches in for the frames it needs.
 ## Why both are on Pages
 
 Free Pages allows 20,000 files per project and 25 MiB per file. The photograph
-set is 1,414 files with a largest file of 832 KB — 7% of the ceiling, with
+set is 1,414 files with a largest file of 832 KB – 7% of the ceiling, with
 room for roughly thirteen times the current library.
 
 **Bandwidth is not metered.** That is the point of the move, more than any
 particular attack: Firebase's no-cost plan stopped serving after 360 MB in a
-day, which is about twenty people reading one delivery — or one bored person
+day, which is about twenty people reading one delivery – or one bored person
 with a download manager. There is no equivalent lever here. Traffic that would
 have taken the images offline now just gets served.
 
@@ -30,7 +30,7 @@ configuration and costs nothing.
 
 ## 1. Prerequisite: move the domain
 
-`elmapt.com` has to be on Cloudflare DNS — nameservers pointed at Cloudflare,
+`elmapt.com` has to be on Cloudflare DNS – nameservers pointed at Cloudflare,
 not just a CNAME. Everything below assumes the zone is active. This is the
 one irreversible-feeling step; it is also what makes the rest free.
 
@@ -38,23 +38,23 @@ one irreversible-feeling step; it is also what makes the rest free.
 
 ```sh
 cd ~/Documents/WebDev/elmapt
-npx wrangler login
+pnpm dlx wrangler login
 
 brew install webp          # one time, for the re-encode step
-./media/refresh.sh         # builds media/img — 1,414 frames, 211 MB
+./media/refresh.sh         # builds media/img – 1,414 frames, 211 MB
 
-npx wrangler pages project create elmapt-media --production-branch=main
-npx wrangler pages deploy media --project-name=elmapt-media
+pnpm dlx wrangler pages project create elmapt-media --production-branch=main
+(cd media && pnpm dlx wrangler pages deploy . --project-name=elmapt-media)
 ```
 
 **Deploy `media`, not `media/img`.** The trailing `/img` in every URL is not
-a Pages default — it comes from `media/img/` becoming `/img/` at the project
+a Pages default – it comes from `media/img/` becoming `/img/` at the project
 root, the same way a future `media/video/` would become `/video/` beside it.
 Deploying `media/img` directly drops that prefix and every frame 404s.
 `media/README.md` and `media/refresh.sh` ride along as harmless static files
 at the project root; nothing links to them and nothing serves them as HTML.
 
-Then bind `img.elmapt.com` to that project — Pages → elmapt-media → Custom
+Then bind `img.elmapt.com` to that project – Pages → elmapt-media → Custom
 domains. That hostname is what `MEDIA_HOST` in `apps/elmapt/vite.config.ts`
 points at, so **bind it before the site build**, or swap `MEDIA_HOST` to
 `https://elmapt-media.pages.dev/img` for the moment. It is one line either
@@ -66,8 +66,17 @@ Verify:
 curl -I https://img.elmapt.com/img/realestate/hotel/thumb/hotel_01_thumb.webp
 ```
 
-`https://img.elmapt.com/` itself will 404 — correct. There is no index there,
+`https://img.elmapt.com/` itself will 404 – correct. There is no index there,
 only `/img` (and, later, whatever else lands beside it).
+
+Share cards (the 1200×630 JPEGs link previews use) live in the same tree,
+under `media/img/og/`. A site build writes `media/share-cards.json`, naming
+each page's lead frame; cut any missing cards before deploying media:
+
+```sh
+pnpm build
+python3 tools/share-cards.py      # pip3 install pillow, one time
+```
 
 Re-run `refresh.sh` and `pages deploy` after any new shoot; only changed files
 upload. `media/img` is git-ignored, so it never reaches GitHub and the site
@@ -83,9 +92,12 @@ Pages → Create → Connect to Git → the repo. Settings:
 | Build output directory | `apps/elmapt/dist` |
 | Root directory | `/` |
 
-`wrangler.toml` declares the output directory too, `.node-version` pins Node
-22, and `_redirects` / `_headers` ship in the build output — the SPA rewrite
-the router needs, and cache headers.
+`wrangler.toml` declares the output directory too, and `.node-version` pins
+Node 22. The build writes one HTML file per route (so links unfurl with the
+right title and picture), `sitemap.xml`, `robots.txt` and `_redirects` (301s
+for old addresses). There is deliberately no catch-all rewrite: with no
+`404.html` in the output, Pages serves `index.html` for any unknown path, and
+the app shows its own not-found page. `_headers` sets cache headers.
 
 **Set no environment variables.** The image host is a committed constant. Then
 bind `elmapt.com` under Custom domains.
@@ -98,7 +110,7 @@ Two free settings that bear on hostile traffic, and one that can bite.
   photographs directly. Requests with no referer still pass, so a link pasted
   into a message still works. Same-zone referers pass too, which is why the
   images are on `img.elmapt.com` rather than a `.pages.dev` address.
-- **Cache rules** on `img.elmapt.com` — the frames are already served with a
+- **Cache rules** on `img.elmapt.com` – the frames are already served with a
   week of `Cache-Control`, and Cloudflare's edge will hold them.
 - **Bot Fight Mode**: leave it off. It challenges unknown user agents, and the
   primary use of this site is a link dropped into a text or a DM, where an

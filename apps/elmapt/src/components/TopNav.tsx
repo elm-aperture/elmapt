@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { categories } from "../gallery/manifest";
-import { pathToPeople, pathToWork } from "../router/routes";
+import { pathToWork } from "../router/routes";
 import { useLocation } from "../router/useRoute";
 import { onClick, onHover, onLeave } from "./navMenu";
 import type { MenuState } from "./navMenu";
@@ -25,8 +25,6 @@ const entries: readonly Entry[] = categories.map((category) => ({
     label: work.navLabel ?? work.title,
   })),
 }));
-
-const PEOPLE = pathToPeople();
 
 type MenuVars = CSSProperties & {
   "--menu-anchor"?: string;
@@ -192,19 +190,6 @@ export function TopNav() {
               </span>
             );
           })}
-
-          <a
-            className="elm-navlink"
-            href={PEOPLE}
-            aria-current={
-              pathname === PEOPLE || pathname.startsWith(`${PEOPLE}/`)
-                ? "page"
-                : undefined
-            }
-            draggable={false}
-          >
-            Photographers
-          </a>
         </nav>
       </div>
     </header>

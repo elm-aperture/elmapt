@@ -30,7 +30,7 @@ type MosaicProps = {
   /* Skip the OpenFrame filler cells that otherwise round a run out to a full
    * block, and centre whatever's left instead of leaving it hanging off the
    * grid's left edge. For a case study, "here are the N frames actually
-   * delivered" is the whole point — padding the count out with placeholder
+   * delivered" is the whole point – padding the count out with placeholder
    * boxes reads as unfinished work, not as a design choice. The main
    * category pages (Hotel, Motel, ...) don't set this: their galleries are
    * a fixed quota exactly the size of the grid, so there's never a ragged
@@ -52,8 +52,9 @@ export function Mosaic({
   linkFor,
   eagerCount = 4,
   deferred = false,
-  ragged = false,
+  ragged: raggedProp = false,
 }: MosaicProps) {
+  const ragged = raggedProp || gallery.ragged === true;
   const list = useMemo(
     () =>
       frames ?? Array.from({ length: gallery.count }, (_, index) => index + 1),

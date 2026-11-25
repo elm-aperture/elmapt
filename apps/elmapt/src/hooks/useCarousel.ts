@@ -63,6 +63,10 @@ export function useCarousel(count: number): Carousel {
 
   const ready = settled.size >= count;
 
+  /* Restart the hold whenever the frame changes, so a manual step gets a
+   * full HOLD before the next automatic advance. */
+  const shown = at.current;
+
   useEffect(() => {
     if (!ready || still || !visible || count < 2) return;
 
@@ -74,7 +78,7 @@ export function useCarousel(count: number): Carousel {
     }, HOLD);
 
     return () => window.clearInterval(timer);
-  }, [ready, still, visible, count, at.current]);
+  }, [ready, still, visible, count, shown]);
 
   const step = useCallback(
     (delta: 1 | -1) => {

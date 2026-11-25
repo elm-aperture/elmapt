@@ -1,4 +1,4 @@
-import { resUrl } from "./sources";
+import { resUrl, sourceFrame } from "./sources";
 import { UNATTRIBUTED } from "./types";
 import type {
   Category,
@@ -72,22 +72,22 @@ const hotelGallery: Gallery = {
   mid: REAL_ESTATE_MID,
   block: FRAMES_PER_SET,
   plates: [
-    { title: "Holiday Inn Express", where: "Schulenberg, TX", by: "Rain" },
+    { title: "Holiday Inn Express", where: "Schulenburg, TX", by: "Rain" },
     { title: "Ark Suites", where: "Jonesboro, AR", by: "Rain" },
-    { title: "IHG Garner", where: "Gonzalez, TX", by: "Rain" },
+    { title: "IHG Garner", where: "Gonzales, TX", by: "Rain" },
     { title: "Candlewood Suites", where: "Jonesboro, AR", by: "Rain" },
     { title: "OYO", where: "Beeville, TX", by: "Rain" },
-    { title: "Holiday Inn Express", where: "Schulenberg, TX", by: "Rain" },
+    { title: "Holiday Inn Express", where: "Schulenburg, TX", by: "Rain" },
     { title: "Holiday Inn", where: "Jonesboro, AR", by: "Rain" },
     { title: "Holiday Inn", where: "Jonesboro, AR", by: "Rain" },
     { title: "Holiday Inn", where: "Jonesboro, AR", by: "Rain" },
-    { title: "IHG Garner", where: "Gonzalez, TX", by: "Rain" },
+    { title: "IHG Garner", where: "Gonzales, TX", by: "Rain" },
     { title: "Candlewood Suites", where: "Jonesboro, AR", by: "Rain" },
     { title: "Ark Suites", where: "Jonesboro, AR", by: "Rain" },
     { title: "Holiday Inn", where: "Jonesboro, AR", by: "Rain" },
-    { title: "IHG Garner", where: "Gonzalez, TX", by: "Rain" },
+    { title: "IHG Garner", where: "Gonzales, TX", by: "Rain" },
     { title: "Candlewood Suites", where: "Jonesboro, AR", by: "Rain" },
-    { title: "IHG Garner", where: "Gonzalez, TX", by: "Rain" },
+    { title: "IHG Garner", where: "Gonzales, TX", by: "Rain" },
     { title: "Holiday Inn", where: "Jonesboro, AR", by: "Rain" },
     { title: "Candlewood Suites", where: "Jonesboro, AR", by: "Rain" },
   ],
@@ -227,8 +227,8 @@ const commercialGallery: Gallery = {
     { title: "The Stoneleigh", where: "2300 Wolf", by: "Rain" },
     { title: "Azure", where: "2900 McKinney", by: "Rain" },
     { title: "Bleu Ciel", where: "3130 N Harwood", by: "Rain" },
-    { title: "Delhi6", where: "Exterior", by: "Rain" },
-    { title: "Delhi6", where: "Patio", by: "Rain" },
+    { title: "Delhi6", where: "restaurant exterior", by: "Rain" },
+    { title: "Delhi6", where: "restaurant patio", by: "Rain" },
   ],
 };
 
@@ -244,24 +244,24 @@ const residentialGallery: Gallery = {
   mid: REAL_ESTATE_MID,
   block: FRAMES_PER_SET,
   plates: [
-    { title: "Living Room", where: "bracket", by: "Rain" },
-    { title: "Living Room", where: "bracket", by: "Rain" },
-    { title: "Furniture", where: "detail", by: "Rain" },
-    { title: "Furniture", where: "detail", by: "Rain" },
-    { title: "Furniture", where: "detail", by: "Rain" },
-    { title: "Main Bed", where: "bracket", by: "Rain" },
-    { title: "Main Bed", where: "bracket", by: "Rain" },
-    { title: "Main Bath", where: "bracket", by: "Rain" },
-    { title: "Bath", where: "detail", by: "Rain" },
-    { title: "Bath", where: "detail", by: "Rain" },
-    { title: "Kitchen", where: "bracket", by: "Rain" },
-    { title: "Kitchen", where: "bracket", by: "Rain" },
-    { title: "Main Bath", where: "bracket", by: "Rain" },
-    { title: "Kitchen", where: "detail", by: "Rain" },
-    { title: "Kitchen", where: "detail", by: "Rain" },
-    { title: "Gym", where: "bracket", by: "Rain" },
-    { title: "Patio", where: "bracket", by: "Rain" },
-    { title: "Patio", where: "detail", by: "Rain" },
+    { title: "Living Room", by: "Rain" },
+    { title: "Living Room", by: "Rain" },
+    { title: "Staging detail", by: "Rain" },
+    { title: "Staging detail", by: "Rain" },
+    { title: "Staging detail", by: "Rain" },
+    { title: "Main Bedroom", by: "Rain" },
+    { title: "Main Bedroom", by: "Rain" },
+    { title: "Main Bathroom", by: "Rain" },
+    { title: "Bathroom detail", by: "Rain" },
+    { title: "Bathroom detail", by: "Rain" },
+    { title: "Kitchen", by: "Rain" },
+    { title: "Kitchen", by: "Rain" },
+    { title: "Main Bathroom", by: "Rain" },
+    { title: "Kitchen detail", by: "Rain" },
+    { title: "Kitchen detail", by: "Rain" },
+    { title: "Home Gym", by: "Rain" },
+    { title: "Patio", by: "Rain" },
+    { title: "Patio detail", by: "Rain" },
   ],
 };
 
@@ -278,7 +278,8 @@ const headshotGallery: Gallery = {
   slug: "headshot",
   count: FRAMES_PER_SET,
 
-  order: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 19, 20, 21, 22, 15, 16, 17, 18],
+  // Best to worst.
+  order: [22, 8, 4, 5, 21, 19, 3, 2, 20, 6, 9, 1, 7, 14, 15, 16, 17, 18],
   pad: 2,
   ratio: UPRIGHT_RATIO,
   spans: {},
@@ -287,23 +288,22 @@ const headshotGallery: Gallery = {
   plates: [
     ...fillTo(
       [
-        { title: "Annie", by: "Rain" },
-        { title: "Allison", by: "Rain" },
-        { title: "Zach", by: "Rain" },
-        { title: "Angel", by: "Rain" },
-        { title: "Angelina", by: "Rain" },
-        { title: "Zimo", by: "Rain" },
-        { title: "Zadie", by: "Rain" },
-        { title: "Lucinda", by: "Rain" },
-        { title: "Julie", by: "Maivy" },
-        { title: "Grace", by: "Rain" },
+        { title: "Annie", where: "student", by: "Rain" },
+        { title: "Allison", where: "student", by: "Rain" },
+        { title: "Zach", where: "actor", by: "Rain" },
+        { title: "Angel", where: "student", by: "Rain" },
+        { title: "Angelina", where: "actor", by: "Rain" },
+        { title: "Zimo", where: "student", by: "Rain" },
+        { title: "Zadie", where: "student", by: "Rain" },
+        { title: "Lucinda", where: "realtor", by: "Rain" },
+        { title: "Julie", where: "actor", by: "Maivy" },
       ],
       FRAMES_PER_SET,
     ),
-    { title: "Corrine", by: "Rain" },
-    { title: "Eric", by: "Rain" },
-    { title: "Augustina", by: "Rain" },
-    { title: "Catalina", by: "Rain" },
+    { title: "Corrine", where: "architect", by: "Rain" },
+    { title: "Eric", where: "software engineer", by: "Rain" },
+    { title: "Augustina", where: "insurance", by: "Rain" },
+    { title: "Catalina", where: "media", by: "Rain" },
   ],
 };
 
@@ -312,7 +312,8 @@ const professionalGallery: Gallery = {
   dir: "portrait",
   slug: "professional",
   count: FRAMES_PER_SET,
-  order: [1, 2, 3, 4, 5, 6, 7, 8, 19, 20, 11, 12, 13, 14, 15, 16, 17, 18],
+  // Best to worst.
+  order: [1, 20, 8, 21, 19, 3, 5, 4, 6, 2, 7, 12, 13, 14, 15, 16, 17, 18],
   pad: 2,
   ratio: UPRIGHT_RATIO,
   spans: {},
@@ -332,8 +333,9 @@ const professionalGallery: Gallery = {
       ],
       FRAMES_PER_SET,
     ),
-    { title: "Isha", by: "Rain" },
-    { title: "Paola", by: "Rain" },
+    { title: "Isha", where: "podcast host", by: "Rain" },
+    { title: "Paola", where: "author", by: "Rain" },
+    { title: "Grace", where: "photographer", by: "Rain" },
   ],
 };
 
@@ -365,12 +367,12 @@ const lifestyleGallery: Gallery = {
         { title: "Christi Lux", where: "Texas Kill City premiere", by: "Rain" },
         { title: "Lilian", where: "Ambishen Studio", by: "Rain" },
         { title: "Adam", where: "Prosper crop field", by: "Rain" },
-        { title: "Tea", where: "with an umbrella", by: "Rain" },
+        { title: "Tea", where: "Arlington", by: "Rain" },
       ],
       FRAMES_PER_SET,
     ),
-    { title: "Cory", by: "Rain" },
-    { title: "Ella", by: "Rain" },
+    { title: "Cory", where: "Plano", by: "Rain" },
+    { title: "Ella", where: "Dallas Dreamhaus", by: "Rain" },
   ],
 };
 
@@ -465,11 +467,11 @@ const weddingGallery: Gallery = {
     { title: "Thanksgiving Square", where: "wedding portrait", by: "Rain" },
     { title: "Pilgrim Rest Church", where: "ceremony", by: "Maivy" },
     { title: "Pilgrim Rest Church", where: "ceremony", by: "Maivy" },
-    { title: "Daniela & Jason", where: "The Springs", by: "Rain" },
-    { title: "Daniela & Jason", where: "The Springs", by: "Rain" },
-    { title: "Daniela & Jason", where: "The Springs", by: "Rain" },
-    { title: "Daniela & Jason", where: "The Springs", by: "Rain" },
-    { title: "Daniela & Jason", where: "The Springs", by: "Rain" },
+    { title: "The Springs", where: "wedding", by: "Rain" },
+    { title: "The Springs", where: "wedding", by: "Rain" },
+    { title: "The Springs", where: "wedding", by: "Rain" },
+    { title: "The Springs", where: "wedding", by: "Rain" },
+    { title: "The Springs", where: "wedding", by: "Rain" },
   ],
 };
 
@@ -492,25 +494,25 @@ const liveGallery: Gallery = {
     { title: "Guided Tour", by: "Rain" },
     { title: "Graduation Party", by: "Maivy" },
     { title: "Graduation Party", by: "Rain" },
-    { title: "Mai Colachi", by: "Rain" },
+    { title: "Family Celebration", by: "Rain" },
     { title: "Botswana Independence Day", by: "Rain" },
     { title: "Botswana Independence Day", by: "Rain" },
 
     { title: "Jaynwach Product Debut", by: "Rain" },
-    { title: "Sidekicks Match", by: "Rain" },
-    { title: "Ify's First Birthday", by: "Rain" },
-    { title: "Mogul Red Carpet", by: "Maivy" },
+    { title: "Dallas Sidekicks Match", by: "Rain" },
+    { title: "First Birthday", by: "Rain" },
+    { title: "Mogul Red Carpet", where: "Gas Monkey Live", by: "Maivy" },
     { title: "Rooftop Birthday", by: "Rain" },
-    { title: "Mogul Red Carpet", by: "Rain" },
+    { title: "Mogul Red Carpet", where: "Gas Monkey Live", by: "Rain" },
     { title: "Engagement Party", where: "Mi Cocina", by: "Rain" },
-    { title: "Mogul Red Carpet", by: "Rain" },
-    { title: "Retirement Party", by: "Rain" },
+    { title: "Mogul Red Carpet", where: "Gas Monkey Live", by: "Rain" },
+    { title: "Retirement Party", where: "Ricochet office park", by: "Rain" },
   ],
 };
 
 export const NO_FRAMES = "No frames published yet";
 
-export const categories: readonly Category[] = [
+const drafted: readonly Category[] = [
   {
     slug: "realestate",
     label: "Real Estate",
@@ -554,7 +556,7 @@ export const categories: readonly Category[] = [
           },
           {
             heading: "Clear, Consistent Representation",
-            body: "You understand your guests, the questions they commonly have, and the features that matter most to your property. Coverage defaults are informed by years of motel-focused work, but property-specific requests can always be incorporated — whether that means emphasizing roadside visibility, highlighting particular amenities, documenting renovations, or clarifying common guest points of confusion.",
+            body: "You understand your guests, the questions they commonly have, and the features that matter most to your property. Coverage defaults are informed by years of motel-focused work, but property-specific requests can always be incorporated – whether that means emphasizing roadside visibility, highlighting particular amenities, documenting renovations, or clarifying common guest points of confusion.",
           },
         ],
         figure: {
@@ -602,6 +604,20 @@ export const categories: readonly Category[] = [
           "Standardized portraits for corporate, academic, and professional use.",
         gallery: headshotGallery,
         cover: 1,
+        prose: [
+          {
+            heading: "Consistent Group Headshots",
+            body: "Headshots are standardized, neutral portraits built for companies, schools, and teams. Every person is photographed under the same setup, so a staff page, directory, or roster reads as one cohesive set.",
+          },
+          {
+            heading: "Studio Sessions",
+            body: "Every headshot session includes studio rental, with a two-hour minimum, which makes this setup best suited to groups. For an individual headshot – for LinkedIn, a speaker bio, or a personal website – Professional Portraits cost less and offer more flexibility in location and background.",
+            link: {
+              text: "Professional Portraits",
+              href: "/portrait/professional",
+            },
+          },
+        ],
       },
       {
         slug: "lifestyle",
@@ -665,6 +681,62 @@ export const categories: readonly Category[] = [
     ],
   },
 ];
+
+/** Show filler plates, open frames and empty galleries. On in `pnpm dev`, so
+ * an unfinished gallery can still be judged at full size; off in a build, so
+ * the public site only ever shows frames that exist. */
+export const SHOW_UNFINISHED = import.meta.env.DEV;
+
+const isFiller = (gallery: Gallery, position: number) =>
+  gallery.plates?.[sourceFrame(gallery, position) - 1]?.by === UNATTRIBUTED;
+
+/** Drop filler frames and renumber display positions so `order` and `focus`
+ * still line up with the frames that remain. A gallery left short of its
+ * block becomes a ragged mosaic: uniform tiles, last row centred, never
+ * padded with open frames. Ragged mosaics are flex rows and cannot honour
+ * spans, so spans are dropped, and the column count is capped at the number
+ * of frames so a three-frame set fills a row instead of a sixth of one. */
+export function publish(gallery: Gallery): Gallery {
+  const kept = Array.from({ length: gallery.count }, (_, i) => i + 1).filter(
+    (position) => !isFiller(gallery, position),
+  );
+  const full = kept.length === gallery.count;
+  if (full && gallery.count % gallery.block === 0) return gallery;
+
+  const focus: Record<number, string> = {};
+  kept.forEach((position, index) => {
+    const at = gallery.focus?.[position];
+    if (at) focus[index + 1] = at;
+  });
+
+  const most = Math.max(1, kept.length);
+  const [wide, mid, narrow] = gallery.cols;
+
+  return {
+    ...gallery,
+    count: kept.length,
+    order: kept.map((position) => sourceFrame(gallery, position)),
+    spans: {},
+    focus,
+    cols: [Math.min(wide, most), Math.min(mid, most), Math.min(narrow, most)],
+    ragged: true,
+  };
+}
+
+function publishAll(list: readonly Category[]): readonly Category[] {
+  return list
+    .map((category) => ({
+      ...category,
+      work: category.work
+        .map((work) => ({ ...work, gallery: publish(work.gallery) }))
+        .filter((work) => work.gallery.count > 0),
+    }))
+    .filter((category) => category.work.length > 0);
+}
+
+export const categories: readonly Category[] = SHOW_UNFINISHED
+  ? drafted
+  : publishAll(drafted);
 
 export function findCategory(slug: string): Category | undefined {
   return categories.find((category) => category.slug === slug);

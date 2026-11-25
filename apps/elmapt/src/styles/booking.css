@@ -1,0 +1,163 @@
+.booking__body {
+  display: grid;
+  justify-items: center;
+  gap: var(--elm-space-7);
+  padding-bottom: clamp(40px, 6vw, 80px);
+}
+
+.booking__form {
+  width: min(100%, 620px);
+  padding: clamp(22px, 4vw, 44px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.booking__row {
+  display: grid;
+  gap: 18px;
+}
+
+@media (min-width: 560px) {
+  .booking__row--pair {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.booking__field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.booking__field > span {
+  color: var(--elm-ink-dim);
+  font-size: var(--elm-text-xs);
+  font-weight: 300;
+  letter-spacing: var(--elm-track-wider);
+  text-transform: uppercase;
+}
+
+.booking__field input,
+.booking__field select,
+.booking__field textarea {
+  width: 100%;
+  border: 1px solid var(--elm-glass-edge);
+  border-radius: var(--elm-radius-md);
+  background: rgba(242, 243, 246, 0.055);
+  color: var(--elm-ink);
+  padding: 11px 13px;
+  font: inherit;
+  font-size: 16px; /* 16px keeps iOS Safari from zooming on focus */
+  font-weight: 300;
+  color-scheme: dark;
+  transition:
+    border-color var(--elm-dur-2) var(--elm-ease),
+    background-color var(--elm-dur-2) var(--elm-ease);
+}
+
+.booking__field input::placeholder {
+  color: var(--elm-ink-faint);
+}
+
+.booking__field select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 34px;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--elm-ink-dim) 50%) no-repeat
+      calc(100% - 18px) 50% / 6px 6px,
+    linear-gradient(135deg, var(--elm-ink-dim) 50%, transparent 50%) no-repeat
+      calc(100% - 12px) 50% / 6px 6px,
+    rgba(242, 243, 246, 0.055);
+}
+
+.booking__field select option,
+.booking__field select optgroup {
+  background: var(--elm-bg);
+  color: var(--elm-ink);
+}
+
+.booking__field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.booking__field input:focus-visible,
+.booking__field select:focus-visible,
+.booking__field textarea:focus-visible {
+  outline: none;
+  border-color: var(--elm-glass-rim);
+  background-color: rgba(242, 243, 246, 0.085);
+}
+
+.booking__field input:-webkit-autofill {
+  -webkit-text-fill-color: var(--elm-ink);
+  caret-color: var(--elm-ink);
+  transition: background-color 99999s ease-in-out 0s;
+}
+
+.booking__error {
+  margin: 0;
+  color: #f2b8b5;
+  font-size: var(--elm-text-sm);
+}
+
+.booking__submit {
+  align-self: center;
+  margin-top: var(--elm-space-2);
+}
+
+.booking__status {
+  margin: 0;
+  text-align: center;
+  color: var(--elm-ink-dim);
+  font-size: var(--elm-text-xs);
+  line-height: 1.6;
+}
+
+.booking__direct {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--elm-space-3);
+  text-align: center;
+}
+
+.booking__direct p {
+  margin: 0;
+}
+
+.booking__direct ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(14px, 2vw, 26px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.booking__direct a {
+  color: var(--elm-ink-dim);
+  font-size: var(--elm-text-sm);
+  transition: color var(--elm-dur-2) var(--elm-ease);
+}
+
+.booking__direct a:hover,
+.booking__direct a:focus-visible {
+  color: var(--elm-ink);
+}
+
+.booking__trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.booking__submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}

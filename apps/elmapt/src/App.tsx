@@ -9,32 +9,17 @@ import { CaseStudyPage } from "./pages/CaseStudyPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { PhotographersPage } from "./pages/PhotographersPage";
 import { PhotographerPage } from "./pages/PhotographerPage";
+import { BookingPage } from "./pages/BookingPage";
+import { LandingPage } from "./pages/LandingPage";
+import { PrivacyPage } from "./pages/PrivacyPage";
 import { BookingDock } from "./components/BookingDock";
+import { SiteFooter } from "./components/SiteFooter";
 import { isViewingFrame } from "./hooks/useLightbox";
 import { useScrollLock } from "./hooks/useScrollLock";
 import { useSheet } from "./hooks/useSheet";
 import { useLocation, useRoute } from "./router/useRoute";
 import type { Screen } from "./router/routes";
-import { site } from "./site/site";
-
-function screenTitle(screen: Screen): string {
-  switch (screen.kind) {
-    case "category":
-      return `${screen.category.label} — ${site.name}`;
-    case "work":
-      return `${screen.work.title} — ${site.name}`;
-    case "study":
-      return `${screen.study.name} — ${site.name}`;
-    case "people":
-      return `Photographers — ${site.name}`;
-    case "person":
-      return `${screen.person.name} — ${site.name}`;
-    case "missing":
-      return `Not found — ${site.name}`;
-    default:
-      return site.name;
-  }
-}
+import { titleFor } from "./site/meta";
 
 function view(screen: Screen) {
   switch (screen.kind) {
@@ -52,6 +37,12 @@ function view(screen: Screen) {
           study={screen.study}
         />
       );
+    case "booking":
+      return <BookingPage />;
+    case "privacy":
+      return <PrivacyPage />;
+    case "landing":
+      return <LandingPage landing={screen.landing} sections={screen.sections} />;
     case "people":
       return <PhotographersPage />;
     case "person":
@@ -68,12 +59,14 @@ export default function App() {
   const { hash } = useLocation();
 
   const home = screen.kind === "home";
+  const landing = screen.kind === "landing";
+  const booking = screen.kind === "booking";
   const sheet = useSheet({ enabled: home });
 
   useScrollLock(home || sheet.open);
 
   useEffect(() => {
-    document.title = screenTitle(screen);
+    document.title = titleFor(screen);
   }, [screen]);
 
   return (
@@ -86,10 +79,12 @@ export default function App() {
           {view(screen)}
         </main>
 
-        {home && <Sheet sheet={sheet} />}
+        {home ? <Sheet sheet={sheet} /> : <SiteFooter />}
       </div>
 
-      <BookingDock hidden={isViewingFrame(hash)} />
+      <BookingDock
+        hidden={booking || landing || isViewingFrame(hash)}
+      />
     </>
   );
 }

@@ -1,0 +1,126 @@
+.sitefoot {
+  margin-top: auto;
+  border-top: 1px solid var(--elm-line-soft);
+  background: rgba(8, 10, 13, 0.35);
+}
+
+.sitefoot__inner {
+  display: grid;
+  gap: clamp(28px, 4vw, 48px);
+  padding-top: clamp(36px, 5vw, 64px);
+  /* Clear the floating booking button. */
+  padding-bottom: calc(96px + env(safe-area-inset-bottom));
+}
+
+@media (min-width: 900px) {
+  .sitefoot__inner {
+    grid-template-columns: minmax(180px, 1fr) 4fr;
+  }
+
+  .sitefoot__legal {
+    grid-column: 1 / -1;
+  }
+}
+
+.sitefoot__brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--elm-space-3);
+}
+
+.sitefoot__mark {
+  color: var(--elm-ink-soft);
+  font-size: var(--elm-text-md);
+}
+
+.sitefoot__area {
+  margin: 0;
+  color: var(--elm-ink-faint);
+}
+
+.sitefoot__cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: clamp(24px, 3vw, 36px);
+}
+
+.sitefoot__head {
+  margin: 0 0 var(--elm-space-4);
+  color: var(--elm-ink-dim);
+}
+
+.sitefoot__head a {
+  color: inherit;
+}
+
+.sitefoot__col ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--elm-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sitefoot__col li a {
+  color: var(--elm-ink-dim);
+  font-size: var(--elm-text-sm);
+  font-weight: 300;
+  overflow-wrap: anywhere;
+  transition: color var(--elm-dur-2) var(--elm-ease);
+}
+
+.sitefoot__col a:hover,
+.sitefoot__col a:focus-visible,
+.sitefoot__mark:hover {
+  color: var(--elm-ink);
+}
+
+.sitefoot__reach,
+.sitefoot__note {
+  margin: 0;
+  color: var(--elm-ink-dim);
+  font-size: var(--elm-text-sm);
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 32ch;
+}
+
+.sitefoot__note {
+  margin-top: var(--elm-space-4);
+  color: var(--elm-ink-faint);
+}
+
+.sitefoot__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--elm-space-3) var(--elm-space-6);
+  margin: 0;
+  padding-top: var(--elm-space-5);
+  border-top: 1px solid var(--elm-line-soft);
+  color: var(--elm-ink-faint);
+  font-size: var(--elm-text-xs);
+  letter-spacing: var(--elm-track-wide);
+}
+
+.sitefoot__legal a,
+.sitefoot__top {
+  color: inherit;
+  transition: color var(--elm-dur-2) var(--elm-ease);
+}
+
+.sitefoot__legal a:hover,
+.sitefoot__top:hover {
+  color: var(--elm-ink);
+}
+
+.sitefoot__top {
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}

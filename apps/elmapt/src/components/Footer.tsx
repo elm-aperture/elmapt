@@ -21,11 +21,22 @@ export function Footer({
           if (event.detail === 0) onToggle();
         }}
       >
-        <span className="footer__line footer__line--place elm-eyebrow">
-          Dallas - Fort Worth
-        </span>
+        <svg
+          className="footer__chev"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            d="M6 15l6-6 6 6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
         <span className="footer__line footer__line--lead elm-wordmark">
-          Photo<span className="footer__amp"> &amp; </span>Video
+          About us
         </span>
       </button>
 
@@ -53,30 +64,6 @@ export function Footer({
               cx="17.3"
               cy="6.7"
               r="0.9"
-              fill="currentColor"
-              stroke="none"
-            />
-          </svg>
-        </a>
-
-        <a
-          className="footer__icon"
-          href={site.youtube.href}
-          aria-label="Elm Aperture on YouTube"
-          draggable={false}
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            <rect x="3" y="5" width="18" height="14" rx="4" />
-            <path
-              d="M10.5 9.5l5 2.5-5 2.5z"
               fill="currentColor"
               stroke="none"
             />

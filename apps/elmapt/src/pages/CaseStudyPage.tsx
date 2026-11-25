@@ -3,7 +3,8 @@ import { Lightbox } from "../components/gallery/Lightbox";
 import { SectionRail } from "../components/gallery/SectionRail";
 import { useLightbox } from "../hooks/useLightbox";
 import { useScrollLock } from "../hooks/useScrollLock";
-import { pathToWork } from "../router/routes";
+import { pathToBookingFor, pathToWork } from "../router/routes";
+import { GalleryCta } from "../components/GalleryCta";
 import type { CaseStudy, Category, Work } from "../gallery/types";
 import "../styles/study.css";
 
@@ -44,6 +45,8 @@ export function CaseStudyPage({ category, work, study }: CaseStudyPageProps) {
           ragged
         />
       </div>
+
+      <GalleryCta href={pathToBookingFor(work)} />
 
       <Lightbox
         gallery={study.gallery}

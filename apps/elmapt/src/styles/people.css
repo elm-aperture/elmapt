@@ -73,3 +73,7 @@
     transform: none;
   }
 }
+
+.person__book {
+  align-self: flex-start;
+}

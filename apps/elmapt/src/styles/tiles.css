@@ -1,0 +1,68 @@
+.tiles {
+  display: grid;
+  gap: clamp(16px, 2vw, 24px);
+  margin: 0 auto;
+  padding-top: calc(clamp(32px, 5vw, 72px) + var(--elm-radius-lg));
+  list-style: none;
+}
+
+@media (min-width: 760px) {
+  .tiles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.tiles__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--elm-space-3);
+}
+
+.tiles__link {
+  display: block;
+  color: inherit;
+}
+
+.tiles__frame {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  width: 100%;
+}
+
+.tiles__frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 55%);
+  pointer-events: none;
+}
+
+.tiles__name {
+  position: absolute;
+  z-index: 1;
+  left: var(--elm-space-5);
+  bottom: var(--elm-space-5);
+  color: var(--elm-ink);
+  font-size: var(--elm-text-md);
+}
+
+.tiles__works {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--elm-space-2) var(--elm-space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tiles__works a {
+  color: var(--elm-ink-dim);
+  font-size: var(--elm-text-sm);
+  transition: color var(--elm-dur-2) var(--elm-ease);
+}
+
+.tiles__works a:hover,
+.tiles__works a:focus-visible {
+  color: var(--elm-ink);
+}

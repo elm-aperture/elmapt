@@ -1,7 +1,14 @@
-import { cpSync, existsSync, readdirSync } from "node:fs";
-import { join, resolve } from "node:path";
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "node:fs";
+import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { defineConfig, loadEnv } from "vite";
+import { defineConfig, loadEnv, runnerImport } from "vite";
 import type { Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 
@@ -26,9 +33,28 @@ function mediaHtml(base: string): Plugin {
   };
 }
 
-function publicAssets(): Plugin {
+/* The shape of src/site/seo.ts as this config uses it. Declared here rather
+ * than imported, so the Node tsconfig never type-checks app code. */
+type SeoPage = { readonly path: string };
+type Seo = {
+  readonly redirects: Readonly<Record<string, string>>;
+  pages(): readonly SeoPage[];
+  withStructuredData(html: string): string;
+  renderShell(html: string, page: SeoPage): string;
+  sitemap(list: readonly SeoPage[]): string;
+  robots(): string;
+  shareCards(list: readonly SeoPage[]): string;
+  redirectsFile(table: Readonly<Record<string, string>>): string;
+};
+
+/* After the bundle is written: copy public/ into dist, then load the route
+ * table through Vite (so the manifest sees the same defines and production
+ * mode as the app) and emit one HTML shell per route plus sitemap.xml,
+ * robots.txt and _redirects. One hook, so the steps run in order. */
+function publicAssets(media: string): Plugin {
   let publicDir = "";
   let outDir = "";
+  let root = "";
 
   return {
     name: "elm-public-assets",
@@ -36,15 +62,53 @@ function publicAssets(): Plugin {
     configResolved(config) {
       publicDir = config.publicDir;
       outDir = resolve(config.root, config.build.outDir);
+      root = config.root;
     },
-    closeBundle() {
-      if (!publicDir) return;
-      for (const entry of readdirSync(publicDir)) {
-        if (entry === "res") continue;
-        cpSync(join(publicDir, entry), join(outDir, entry), {
-          recursive: true,
-        });
+    async closeBundle() {
+      if (publicDir) {
+        for (const entry of readdirSync(publicDir)) {
+          if (entry === "res") continue;
+          cpSync(join(publicDir, entry), join(outDir, entry), {
+            recursive: true,
+          });
+        }
       }
+
+      const { module: seo } = await runnerImport<Seo>(
+        join(root, "src/site/seo.ts"),
+        {
+          configFile: false,
+          root,
+          mode: "production",
+          logLevel: "warn",
+          define: { __MEDIA_BASE__: JSON.stringify(media) },
+        },
+      );
+
+      const write = (path: string, body: string) => {
+        const file = join(outDir, path);
+        mkdirSync(dirname(file), { recursive: true });
+        writeFileSync(file, body);
+      };
+
+      const index = seo.withStructuredData(
+        readFileSync(join(outDir, "index.html"), "utf8"),
+      );
+
+      const list = seo.pages();
+      for (const page of list) {
+        const file = page.path === "/" ? "/index" : page.path;
+        write(`${file}.html`, seo.renderShell(index, page));
+      }
+
+      write("sitemap.xml", seo.sitemap(list));
+      write("robots.txt", seo.robots());
+      write("_redirects", seo.redirectsFile(seo.redirects));
+
+      writeFileSync(
+        resolve(root, "../../media/share-cards.json"),
+        seo.shareCards(list),
+      );
     },
   };
 }
@@ -68,7 +132,7 @@ export default defineConfig(({ command, mode }) => {
     if (!top || !existsSync(join(CONFIG_DIR, "public", top))) {
       throw new Error(
         `VITE_IMG_BASE is "${media}", which reads the photographs from ` +
-          `apps/elmapt/public/${top ?? ""} — and that path does not resolve. ` +
+          `apps/elmapt/public/${top ?? ""} – and that path does not resolve. ` +
           "public/res is a symlink into a local copy of the media tree; if " +
           "the copy has moved, repoint the symlink, or unset VITE_IMG_BASE " +
           `to use ${MEDIA_HOST}.`,
@@ -77,7 +141,7 @@ export default defineConfig(({ command, mode }) => {
   }
 
   return {
-    plugins: [react(), mediaHtml(media), publicAssets()],
+    plugins: [react(), mediaHtml(media), publicAssets(media)],
 
     define: {
       __MEDIA_BASE__: JSON.stringify(media),

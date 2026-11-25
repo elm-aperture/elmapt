@@ -46,11 +46,17 @@ export type Gallery = {
 
   readonly block: number;
   readonly plates?: readonly Plate[];
+
+  /** Centre a short last row instead of padding it out with open frames.
+   * Set by `publish` when a gallery holds fewer frames than its block. */
+  readonly ragged?: boolean;
 };
 
 export type Prose = {
   readonly heading: string;
   readonly body: string;
+  /** Makes the first occurrence of `text` in the body a link. */
+  readonly link?: { readonly text: string; readonly href: string };
 };
 
 export type Figure = {

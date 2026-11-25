@@ -11,7 +11,7 @@ QUALITY=82
 [ -d "$SRC" ] || { echo "No source set at $SRC" >&2; exit 1; }
 
 command -v cwebp >/dev/null || {
-  echo "cwebp not found — brew install webp" >&2
+  echo "cwebp not found – brew install webp" >&2
   exit 1
 }
 

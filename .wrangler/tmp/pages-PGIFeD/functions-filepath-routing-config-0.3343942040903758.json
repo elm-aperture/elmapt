@@ -1,0 +1,13 @@
+{
+  "routes": [
+    {
+      "routePath": "/api/booking",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/booking.ts:onRequestPost"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}

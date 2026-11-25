@@ -22,7 +22,12 @@ type FigureVars = CSSProperties & {
 
 const SWIPE_THRESHOLD = 48;
 
-export function Lightbox({ gallery, frame, onClose, onStep }: LightboxProps) {
+export function Lightbox({
+  gallery,
+  frame,
+  onClose,
+  onStep,
+}: LightboxProps) {
   const dialogRef = useRef<HTMLDialogElement | null>(null);
   const touchStartRef = useRef<number | null>(null);
   const [shown, setShown] = useState(false);

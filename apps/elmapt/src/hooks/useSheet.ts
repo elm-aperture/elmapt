@@ -58,7 +58,13 @@ const TAP = 6;
 
 const REST = 140;
 
-const WHEEL_FLICK = 1.1;
+/* Quiet time that separates one wheel gesture from the next. Longer than
+ * REST so a notched mouse wheel, or a hitch between momentum events, still
+ * reads as one gesture. */
+const GESTURE_GAP = 240;
+
+/** Net wheel travel, in px, that counts as meaning to move the sheet. */
+const WHEEL_INTENT = 24;
 
 const SETTLE_PER_PX = 1.15;
 const SETTLE_MIN = 260;
@@ -132,7 +138,8 @@ export function useSheet({
   const trail = useRef<{ at: number; y: number }[]>([]);
   const rolling = useRef(false);
   const rolled = useRef(0);
-  const rolls = useRef<{ at: number; by: number }[]>([]);
+  const lastWheel = useRef(-Infinity);
+  const startedAtTop = useRef(true);
   const easing = useRef<number | undefined>(undefined);
 
   const [was, setWas] = useState(enabled);
@@ -261,13 +268,25 @@ export function useSheet({
       const scroller = pane.current;
       const atTop = !scroller || scroller.scrollTop <= 0;
 
-      if (open && !(atTop && event.deltaY < 0)) return;
-      event.preventDefault();
+      /* A gesture is a run of wheel events with no gap over GESTURE_GAP ms;
+       * a trackpad flick and its momentum count as one. */
+      const fresh = event.timeStamp - lastWheel.current > GESTURE_GAP;
+      lastWheel.current = event.timeStamp;
+      if (fresh) startedAtTop.current = atTop;
 
+      /* Open and at rest: the pane scrolls natively. The one exception is a
+       * pull upward that began at the top, which closes the sheet. A scroll
+       * up that only reaches the top mid-gesture just stops there. */
+      if (open && !rolling.current) {
+        const closing =
+          event.deltaY < 0 && atTop && startedAtTop.current;
+        if (!closing) return;
+      }
+
+      event.preventDefault();
       if (!rolling.current) {
         rolling.current = true;
         rolled.current = open ? reach : 0;
-        rolls.current = [];
         setWheeling(true);
       }
 
@@ -275,32 +294,32 @@ export function useSheet({
         0,
         Math.min(reach, rolled.current + event.deltaY),
       );
-      rolls.current.push({ at: event.timeStamp, by: event.deltaY });
-      while (
-        rolls.current.length > 1 &&
-        event.timeStamp - rolls.current[0].at > TAIL
-      ) {
-        rolls.current.shift();
-      }
       setHand(rolled.current);
+
+      /* Pushed all the way open mid-gesture (or a pull to close reversed):
+       * settle open now and hand the rest of the gesture to the pane, so
+       * scrolling continues into the content instead of stalling until the
+       * wheel goes quiet. */
+      if (rolled.current >= reach && event.deltaY > 0) {
+        window.clearTimeout(resting);
+        rolling.current = false;
+        setWheeling(false);
+        settleTo(true, 1);
+        return;
+      }
 
       window.clearTimeout(resting);
       resting = window.setTimeout(() => {
         rolling.current = false;
         setWheeling(false);
 
+        /* The wheel says which way it means to go: any deliberate push
+         * settles the sheet that way, however short. A single notch of a
+         * mouse wheel opens it just as a long trackpad swipe does. Only
+         * a tiny net movement (trackpad jitter) snaps back. */
         const at = clamp01(paneFor(rolled.current, travel) / travel);
-        const span =
-          rolls.current.length > 1
-            ? rolls.current[rolls.current.length - 1].at - rolls.current[0].at
-            : 0;
-        const by = rolls.current.reduce((sum, roll) => sum + roll.by, 0);
-        const speed = span > 0 ? by / span : 0;
-
-        settleTo(
-          speed > WHEEL_FLICK || (speed >= -WHEEL_FLICK && at >= 0.5),
-          at,
-        );
+        const by = rolled.current - (open ? reach : 0);
+        settleTo(Math.abs(by) >= WHEEL_INTENT ? by > 0 : open, at);
       }, REST);
     };
 
@@ -308,6 +327,9 @@ export function useSheet({
     return () => {
       window.removeEventListener("wheel", onWheel);
       window.clearTimeout(resting);
+      /* Never leave a roll half-claimed across a re-subscribe: a stuck
+       * `rolling` would swallow every wheel event that follows. */
+      rolling.current = false;
     };
   }, [enabled, open, travel, settleTo]);
 

@@ -114,8 +114,7 @@
 .sheet__inner {
   max-width: var(--elm-measure-text);
   margin-inline: auto;
-  padding: calc(clamp(32px, 5vw, 72px) + var(--elm-radius-lg)) var(--elm-gutter)
-    calc(120px + env(safe-area-inset-bottom));
+  padding: clamp(40px, 6vw, 80px) var(--elm-gutter);
 
   display: flex;
   flex-direction: column;
@@ -129,4 +128,10 @@
 
 .sheet__inner p {
   margin: 0;
+}
+
+.about__lede {
+  font-size: var(--elm-text-md);
+  line-height: 1.7;
+  color: var(--elm-ink-soft);
 }

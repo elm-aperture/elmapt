@@ -1,55 +1,103 @@
 # Elm Aperture
 
-> **Work in progress.** This rebuild is under active development and is not yet the production Elm Aperture website.
+The website for [Elm Aperture](https://elmapt.com), my photo and video business in
+Dallas–Fort Worth: real estate, portraits and events, plus booking.
 
-**Current rebuild:** https://beta.elmapt.com  
-**Stable site:** https://elmapt.com
+**Live:** https://beta.elmapt.com (becomes elmapt.com at cutover)
 
-Elm Aperture is my photography and video business. The existing stable site is a React/TypeScript site I built myself and is maintained in the older `elm-aperture` repository.
+React 19 · TypeScript · Vite 8 · pnpm workspaces · Vitest · Cloudflare Pages
 
-This repository began as a copy of that codebase after I decided to let Claude take over the visual implementation and see what it could do with the existing site and content.
+---
 
-This is because i am garbage at css.
+## What's interesting here
 
-The rebuild is currently available at beta.elmapt.com while I work on it. The existing site remains the production site at elmapt.com.
+**Photographs live outside the app.** The app ships about 80 KB of gzipped JavaScript.
+The 1,400+ frames (about 200 MB of WebP) are a separate Cloudflare Pages project
+behind `img.elmapt.com`, deployed from this machine. The site deploys from a
+GitHub push. A media deploy and a code deploy never touch each other, and
+bandwidth is not metered. [`DEPLOY.md`](DEPLOY.md) explains the split.
 
-## Stack
+**Galleries are data, not markup.** Every gallery is an entry in
+[`apps/elmapt/src/gallery/manifest.ts`](apps/elmapt/src/gallery/manifest.ts):
+frame count, aspect ratio, which tiles span 2×2 or 3×3, and a plate per frame
+(title, place, credit). Pages, the nav, the router table, the sitemap and the
+share cards are all derived from it.
 
-- React
-- TypeScript / TSX
-- Vite
-- pnpm
-- Cloudflare Pages
+- **Re-sequencing without renaming files.** `order` maps display position to
+  source frame. Frames are cached for a week at the edge, so files are never
+  renamed or overwritten. A new photo gets a new number, and the gallery is
+  reordered in data. Credits travel with the source frame, layout stays with
+  the display position.
+- **Unfinished work stays out of production.** In `pnpm dev`, galleries keep
+  their placeholder frames so a layout can be judged at full size. A build runs
+  `publish()`, which drops the placeholders, renumbers `order`, spans and crop
+  focus to match, centres any short last row, and hides galleries with nothing
+  in them yet.
 
-This repository is being organized as a monorepo for Elm Aperture's web projects. I'm using pnpm as the package manager, partly to get more experience with both pnpm and monorepo organization.
+**Dense mosaic layout.** A CSS grid (`grid-auto-flow: row dense`) at 6/4/3
+columns with spans per tile. Responsive `sizes` are worked out from each tile's
+span, so a 3×3 hero tile asks for a bigger file than a 1×1. Images go straight
+from a shimmer skeleton to the photo with no layout shift (intrinsic
+`width`/`height` on every `<img>`).
 
-## Current deployment
+**Every page gets its own HTML.** It's a single-page app, but after the bundle
+is written a Vite plugin loads the route table through `runnerImport` and
+writes a static HTML shell per route. Each shell has its own `<title>`,
+description, canonical URL and a 1200×630 JPEG share card (cut by
+`tools/share-cards.py`, since LinkedIn won't unfurl WebP). The same step emits
+`sitemap.xml`, `robots.txt`, schema.org `ProfessionalService` data, and
+`_redirects` with real 301s for every legacy URL.
 
-Production:
+**A small router, written for this site.** `useSyncExternalStore` over the
+History API, link capture, scroll restoration per history entry, and a typed
+`Screen` union, so every page is checked exhaustively at compile time.
 
-`elm-aperture` → Vite → Netlify → elmapt.com
+**A shared design system.** [`packages/theme`](packages/theme) is plain CSS
+custom properties (type, spacing, glass surfaces, motion), consumed by the app
+as a workspace package. Respects `prefers-reduced-motion` throughout.
 
-Rebuild:
+## Layout
 
-`elmapt` → Vite → Cloudflare Pages → beta.elmapt.com
+```
+apps/elmapt/            the site
+  src/gallery/          manifest, URL builders, mosaic sizing
+  src/router/           route table, history store
+  src/site/             people, site facts, page metadata, build-time SEO
+  src/pages/            one component per Screen kind
+packages/theme/         shared CSS design system
+media/                  photograph tree (git-ignored), deployed separately
+tools/                  share-card cutter
+```
 
-The rebuild is deployed directly through Cloudflare Pages.
+## Run it
 
-## Status
+```sh
+pnpm install
+pnpm dev          # http://localhost:5173, images from img.elmapt.com
+pnpm test         # Vitest: manifest integrity, routing, SEO output, booking
+pnpm lint
+pnpm build        # typecheck, bundle, per-route HTML, sitemap
+```
 
-The rebuild is still in development and is not yet the production Elm Aperture website.
+CI runs lint, tests and a full build on every push.
 
-If it reaches the point where I'm happy replacing the existing site, it will eventually take over as the main Elm Aperture website.
+## Deploy
 
-The monorepo is also intended to become the home for additional Elm Aperture sites over time rather than maintaining each one as an unrelated repository.
+The site is a Cloudflare Pages project building from `main`. Photographs and
+share cards deploy by hand:
 
-## Why rebuild it?
+```sh
+pnpm build && python3 tools/share-cards.py
+(cd media && pnpm dlx wrangler pages deploy . --project-name=elmapt-media)
+```
 
-The existing site works, but I wasn't happy with its visual design.
+Details, including the domain setup, are in [`DEPLOY.md`](DEPLOY.md).
 
-Rather than spending the project primarily working on a part of frontend development I don't specialize in, I copied the existing codebase and gave Claude direction to redesign it. Architecture follows my established pattern.
+## How it was built
 
-## AI assistance
+This is a rebuild of the original site, which I wrote by hand in React. For
+this version I worked with Claude (Anthropic) as a pair programmer. I set the
+direction and the design calls, supplied all the content and photography, and
+reviewed and shipped every change.
 
-Claude does the UI styling because i don't want to.
-ChatGPT wrote this readme (save for this note) so i could have some explainer up in the repo while i work.
+Photography © Elm Aperture and the credited photographers. Code © Ryan McKevitt.
