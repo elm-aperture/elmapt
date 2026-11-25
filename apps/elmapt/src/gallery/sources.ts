@@ -1,4 +1,4 @@
-import type { Gallery, Rung } from "./types";
+import type { Gallery, Plate, Rung } from "./types";
 
 export const IMG_BASE = __MEDIA_BASE__;
 
@@ -10,8 +10,17 @@ const THUMB: Rung = { w: 500, dir: "thumb", suffix: "_thumb" };
 const MID: Rung = { w: 960, dir: "big_thumb", suffix: "_big_thumb" };
 const FULL: Rung = { w: 1920, dir: "full", suffix: "" };
 
+export function sourceFrame(gallery: Gallery, frame: number): number {
+  return gallery.order?.[frame - 1] ?? frame;
+}
+
+export function plateFor(gallery: Gallery, frame: number): Plate | undefined {
+  return gallery.plates?.[sourceFrame(gallery, frame) - 1];
+}
+
 export function frameName(gallery: Gallery, frame: number): string {
-  return `${gallery.slug}_${String(frame).padStart(gallery.pad, "0")}`;
+  const source = sourceFrame(gallery, frame);
+  return `${gallery.slug}_${String(source).padStart(gallery.pad, "0")}`;
 }
 
 export function sourceAt(gallery: Gallery, frame: number, rung: Rung): string {

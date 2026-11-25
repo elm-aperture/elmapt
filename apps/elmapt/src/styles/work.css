@@ -30,14 +30,29 @@
   padding-bottom: clamp(24px, 3vw, 32px);
 }
 
+.prose .elm-sectionhead h2,
+.figure .elm-sectionhead h2 {
+  font-family: var(--elm-font-display);
+  font-size: clamp(18px, 2.4vw, 28px);
+  font-weight: 400;
+  letter-spacing: var(--elm-track-wide);
+  color: var(--elm-ink-soft);
+  white-space: normal;
+  text-align: center;
+  text-wrap: balance;
+}
+
 .prose__body {
+  max-width: 64ch;
   margin-inline: auto;
+  font-size: clamp(14px, 1.5vw, 18px);
+  line-height: 1.7;
   text-align: center;
   text-wrap: pretty;
 }
 
 .figure__img {
-  width: min(100%, 900px);
+  width: min(100%, 1240px);
   height: auto;
   margin-inline: auto;
   border-radius: var(--elm-radius-md);

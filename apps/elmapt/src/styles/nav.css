@@ -124,7 +124,7 @@
 
   font-family: var(--elm-font-sans);
   font-size: var(--elm-text-sm);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.1;
   letter-spacing: var(--elm-track-normal);
   color: var(--elm-ink-dim);

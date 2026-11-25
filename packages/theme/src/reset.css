@@ -16,7 +16,7 @@ body {
   color: var(--elm-ink);
   font-family: var(--elm-font-sans);
   font-size: var(--elm-text-md);
-  font-weight: 400;
+  font-weight: 300;
   line-height: var(--elm-leading-normal);
   font-synthesis: none;
   text-rendering: optimizeLegibility;

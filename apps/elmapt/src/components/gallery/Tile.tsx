@@ -15,6 +15,7 @@ type TileProps = {
   eager?: boolean;
   deferred?: boolean;
 
+  focus?: string;
   hold?: boolean;
   onSettled?: (frame: number) => void;
 };
@@ -27,6 +28,7 @@ export function Tile({
   onOpen,
   eager = false,
   deferred = false,
+  focus,
   hold = false,
   onSettled,
 }: TileProps) {
@@ -59,6 +61,7 @@ export function Tile({
         sizes={sizesFor(gallery, span)}
         width={box.width}
         height={box.height}
+        style={focus ? { objectPosition: focus } : undefined}
         alt={
           plate ? `${plate.title}${plate.where ? `, ${plate.where}` : ""}` : ""
         }

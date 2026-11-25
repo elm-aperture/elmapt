@@ -25,3 +25,6 @@ apps/elmapt/public/res
 
 /md/
 *.md
+
+/ref/
+/apps/elmapt/png_in/

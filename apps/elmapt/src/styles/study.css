@@ -40,7 +40,7 @@
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 1.642;
+  aspect-ratio: 1.5;
   overflow: hidden;
   border-radius: var(--elm-radius-lg);
   border: 1px solid var(--elm-line-soft);
@@ -56,12 +56,10 @@
   display: grid;
   grid-template-columns: repeat(var(--wall-cols), minmax(0, 1fr));
   grid-auto-rows: 1fr;
+  gap: 4px;
 
-  gap: 3px;
-
-  transform: scale(1.06);
-  filter: blur(13px) saturate(135%) brightness(0.52);
-  opacity: 0.94;
+  transform: scale(1.015);
+  filter: blur(3px) saturate(115%) brightness(0.62);
 }
 
 .studycard__brick {
@@ -76,9 +74,9 @@
   inset: 0;
   pointer-events: none;
   background: radial-gradient(
-    120% 120% at 50% 45%,
-    transparent 34%,
-    rgba(2, 4, 7, 0.72) 100%
+    130% 130% at 50% 50%,
+    transparent 48%,
+    rgba(2, 4, 7, 0.5) 100%
   );
 }
 
@@ -86,56 +84,68 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  width: min(66%, 760px);
+  width: min(62%, 820px);
   height: auto;
   margin: auto;
-  border-radius: var(--elm-radius-md);
+  border-radius: var(--elm-radius-lg);
   box-shadow: var(--elm-shadow-lift);
   transition: transform var(--elm-dur-3) var(--elm-ease);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .studycard:hover .studycard__feature {
-    transform: scale(1.02);
+    transform: scale(1.015);
   }
 }
 
-.studycard__label {
+.studycard__title,
+.studycard__blurb {
   position: absolute;
   left: 50%;
-  bottom: clamp(10px, 2vw, 22px);
+  z-index: 2;
   transform: translateX(-50%);
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--elm-space-2);
-
-  width: min(92%, 620px);
-  padding: var(--elm-space-4) var(--elm-space-5);
-  border-radius: var(--elm-radius-md);
+  width: min(92%, 820px);
   text-align: center;
+  border-radius: var(--elm-radius-md);
+}
+
+.studycard__title {
+  top: clamp(12px, 2.4vw, 28px);
+  padding: clamp(10px, 1.4vw, 18px) var(--elm-space-5);
+  font-family: var(--elm-font-sans);
+  font-size: clamp(14px, 2.1vw, 26px);
+  font-weight: 300;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: var(--elm-track-wide);
+  color: var(--elm-ink);
 }
 
 .studycard__blurb {
+  bottom: clamp(12px, 2.4vw, 28px);
+  padding: clamp(10px, 1.2vw, 16px) var(--elm-space-5);
   font-family: var(--elm-font-sans);
-  font-size: var(--elm-text-sm);
+  font-size: clamp(12px, 1.4vw, 17px);
   line-height: 1.45;
-  color: var(--elm-ink-dim);
+  color: var(--elm-ink-soft);
   text-wrap: pretty;
 }
 
 @media (max-width: 640px) {
   .studycard__stage {
-    aspect-ratio: 1.1;
+    aspect-ratio: 0.85;
   }
 
   .studycard__wall {
     --wall-cols: 4;
-    filter: blur(8px) saturate(135%) brightness(0.52);
+    gap: 3px;
   }
 
   .studycard__feature {
-    width: min(86%, 420px);
+    width: min(88%, 440px);
+  }
+
+  .studycard__title {
+    letter-spacing: 0.08em;
   }
 }

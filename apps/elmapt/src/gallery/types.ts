@@ -26,6 +26,15 @@ export type Gallery = {
   readonly dir: string;
   readonly slug: string;
   readonly count: number;
+
+  /** Display position (1-based) -> source frame number. Lets a gallery be
+   * re-sequenced without renaming files: file URLs, plates and credits all
+   * stay keyed to the source frame; `spans` stay keyed to display position. */
+  readonly order?: readonly number[];
+
+  /** Display position (1-based) -> CSS object-position, for a frame whose
+   * source shape differs from its tile (a portrait in a landscape cell). */
+  readonly focus?: Readonly<Record<number, string>>;
   readonly pad: 2 | 3;
 
   readonly ratio: number;

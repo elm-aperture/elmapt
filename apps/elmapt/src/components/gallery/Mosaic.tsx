@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import { UNATTRIBUTED } from "../../gallery/types";
 import type { Gallery } from "../../gallery/types";
 import { runLength, spanFor } from "../../gallery/mosaic";
+import { plateFor } from "../../gallery/sources";
 import { OpenFrame, Tile } from "./Tile";
 import "../../styles/gallery.css";
 
@@ -79,10 +80,10 @@ export function Mosaic({
     const plates = gallery.plates;
     if (!plates) return null;
     const held = new Set(
-      list.filter((f) => plates[f - 1]?.by === UNATTRIBUTED),
+      list.filter((f) => plateFor(gallery, f)?.by === UNATTRIBUTED),
     );
     return held.size > 0 && held.size < list.length ? held : null;
-  }, [list, gallery.plates]);
+  }, [list, gallery]);
 
   const realCount = filler ? list.length - filler.size : 0;
   const [settledReal, setSettledReal] = useState<ReadonlySet<number>>(
@@ -130,7 +131,8 @@ export function Mosaic({
               key={`${gallery.id}-${frame}`}
               gallery={gallery}
               frame={frame}
-              plate={gallery.plates?.[frame - 1]}
+              plate={plateFor(gallery, frame)}
+              focus={gallery.focus?.[frame]}
               href={linkFor?.(frame)}
               onOpen={onOpen}
               eager={eager}

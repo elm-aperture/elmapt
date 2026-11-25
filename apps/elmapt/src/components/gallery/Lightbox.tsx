@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import type { Gallery } from "../../gallery/types";
-import { fullSrc, intrinsic, srcSetFor, thumbSrc } from "../../gallery/sources";
+import {
+  fullSrc,
+  intrinsic,
+  plateFor,
+  srcSetFor,
+  thumbSrc,
+} from "../../gallery/sources";
 
 type LightboxProps = {
   gallery: Gallery;
@@ -71,7 +77,7 @@ export function Lightbox({ gallery, frame, onClose, onStep }: LightboxProps) {
 
   const index = frame ?? 1;
   const fullLoaded = loadedFrame === index;
-  const plate = gallery.plates?.[index - 1];
+  const plate = plateFor(gallery, index);
   const box = intrinsic(gallery);
   const figureStyle: FigureVars = { "--lb-ratio": gallery.ratio };
 

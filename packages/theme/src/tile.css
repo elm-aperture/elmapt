@@ -97,9 +97,7 @@
   object-position: center;
   opacity: 0;
   transform: scale(1.001);
-  transition:
-    opacity var(--elm-dur-3) var(--elm-ease),
-    transform var(--elm-dur-3) var(--elm-ease);
+  transition: transform var(--elm-dur-3) var(--elm-ease);
 }
 
 .elm-tile__img.is-loaded {
@@ -145,7 +143,7 @@
 .elm-tile__title {
   font-family: var(--elm-font-sans);
   font-size: var(--elm-text-xs);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.2;
   letter-spacing: var(--elm-track-wide);
   text-transform: uppercase;

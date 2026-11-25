@@ -25,27 +25,26 @@
 .elm-skeleton {
   position: relative;
   overflow: hidden;
-  background-color: rgba(241, 243, 247, 0.035);
   border-radius: var(--elm-radius-sm);
+  box-shadow: inset 0 0 0 1px rgba(242, 243, 246, 0.08);
+  background:
+    linear-gradient(
+      100deg,
+      rgba(242, 243, 246, 0.04) 20%,
+      rgba(242, 243, 246, 0.1) 40%,
+      rgba(242, 243, 246, 0.04) 60%
+    ),
+    rgba(8, 10, 13, 0.28);
+  background-size: 200% 100%;
+  animation: elm-shimmer 1.2s linear infinite;
 }
 
-.elm-skeleton::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  transform: translateX(-100%);
-  background: linear-gradient(
-    100deg,
-    transparent 38%,
-    rgba(241, 243, 247, 0.07) 50%,
-    transparent 62%
-  );
-  animation: elm-sweep 1900ms var(--elm-ease) 320ms infinite;
-}
-
-@keyframes elm-sweep {
+@keyframes elm-shimmer {
+  from {
+    background-position: 100% 0;
+  }
   to {
-    transform: translateX(100%);
+    background-position: -100% 0;
   }
 }
 
@@ -57,7 +56,7 @@
     transition: none;
   }
 
-  .elm-skeleton::after {
+  .elm-skeleton {
     animation: none;
   }
 

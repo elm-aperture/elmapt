@@ -23,7 +23,7 @@
 .elm-eyebrow {
   font-family: var(--elm-font-sans);
   font-size: var(--elm-text-xs);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1;
   text-transform: uppercase;
   letter-spacing: var(--elm-track-wider);
@@ -34,7 +34,7 @@
 .elm-label {
   font-family: var(--elm-font-sans);
   font-size: var(--elm-text-sm);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1;
   text-transform: uppercase;
   letter-spacing: var(--elm-track-wide);
@@ -44,7 +44,7 @@
 .elm-lede {
   font-family: var(--elm-font-display);
   font-size: var(--elm-text-lg);
-  font-style: italic;
+  font-style: normal;
   font-weight: 400;
   line-height: var(--elm-leading-snug);
   letter-spacing: var(--elm-track-normal);
@@ -56,7 +56,7 @@
 .elm-body {
   font-family: var(--elm-font-sans);
   font-size: var(--elm-text-md);
-  font-weight: 400;
+  font-weight: 300;
   line-height: var(--elm-leading-normal);
   color: var(--elm-ink-soft);
   max-width: var(--elm-measure-text);

@@ -27,7 +27,7 @@
 
   font-family: var(--elm-font-sans);
   font-size: var(--elm-text-xs);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1;
   letter-spacing: var(--elm-track-wider);
   text-transform: uppercase;

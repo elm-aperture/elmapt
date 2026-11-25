@@ -1,6 +1,5 @@
 import type { CaseStudy, Gallery } from "../../gallery/types";
 import { fullSrc, srcSetFor, thumbSrc } from "../../gallery/sources";
-import { BREAK_WIDE } from "../../gallery/mosaic";
 import "../../styles/study.css";
 
 type CaseStudyCardProps = {
@@ -34,17 +33,20 @@ export function CaseStudyCard({ study, wall, href }: CaseStudyCardProps) {
             className="studycard__feature"
             src={fullSrc(study.gallery, study.card.frame)}
             srcSet={srcSetFor(study.gallery, study.card.frame)}
-            sizes={`(min-width: ${BREAK_WIDE}px) 46vw, 70vw`}
+            sizes="(min-width: 641px) min(62vw, 820px), 88vw"
             alt={study.name}
             loading="lazy"
             decoding="async"
             draggable={false}
           />
-        </span>
 
-        <span className="studycard__label elm-surface">
-          <span className="elm-eyebrow">{study.card.label}</span>
-          <span className="studycard__blurb">{study.card.blurb}</span>
+          <span className="studycard__title elm-surface">
+            {study.card.label}
+          </span>
+
+          <span className="studycard__blurb elm-surface">
+            {study.card.blurb}
+          </span>
         </span>
       </a>
     </section>

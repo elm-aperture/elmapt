@@ -69,11 +69,8 @@
   --elm-dur-3: 420ms;
   --elm-dur-4: 720ms;
 
-  --elm-font-display:
-    "Libre Caslon Text", "Iowan Old Style", "Hoefler Text", Georgia, serif;
-  --elm-font-sans:
-    "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Helvetica, Arial,
-    sans-serif;
+  --elm-font-display: "Cinzel", "Iowan Old Style", Georgia, serif;
+  --elm-font-sans: Inter, system-ui, Helvetica, Arial, sans-serif;
 
   --elm-track-tight: -0.01em;
   --elm-track-normal: 0;
