@@ -333,6 +333,98 @@ export function useSheet({
     };
   }, [enabled, open, travel, settleTo]);
 
+  /* Touch: a vertical swipe anywhere drags the sheet, not only on the
+   * handle. Closed, a swipe up opens it. Open, a swipe down that starts with
+   * the pane at its top closes it; every other swipe scrolls the pane
+   * natively. Horizontal swipes are left alone. The handles keep their own
+   * pointer dragging. */
+  useEffect(() => {
+    if (!enabled || !travel) return;
+    const reach = zones(travel).total;
+
+    type Track = { x: number; y: number; base: number; claimed: boolean };
+    let track: Track | null = null;
+    let swipe: { at: number; y: number }[] = [];
+
+    const onStart = (event: TouchEvent) => {
+      track = null;
+      if (event.touches.length !== 1) return;
+
+      const target = event.target as Element | null;
+      if (target?.closest("[data-sheet-handle]")) return;
+
+      if (open) {
+        const scroller = pane.current;
+        if (!scroller || !target || !scroller.contains(target)) return;
+        if (scroller.scrollTop > 0) return;
+      }
+
+      const touch = event.touches[0];
+      track = {
+        x: touch.clientX,
+        y: touch.clientY,
+        base: open ? reach : 0,
+        claimed: false,
+      };
+      swipe = [{ at: event.timeStamp, y: touch.clientY }];
+    };
+
+    const onMove = (event: TouchEvent) => {
+      if (!track) return;
+      const touch = event.touches[0];
+      const dx = touch.clientX - track.x;
+      const up = track.y - touch.clientY;
+
+      if (!track.claimed) {
+        if (Math.abs(dx) < TAP && Math.abs(up) < TAP) return;
+        const sideways = Math.abs(dx) > Math.abs(up);
+        const wrongWay = open ? up > 0 : up < 0;
+        if (sideways || wrongWay) {
+          track = null;
+          return;
+        }
+        track.claimed = true;
+        setHand(track.base);
+        setDragging(true);
+      }
+
+      event.preventDefault();
+      swipe.push({ at: event.timeStamp, y: touch.clientY });
+      while (swipe.length > 2 && event.timeStamp - swipe[0].at > TAIL) {
+        swipe.shift();
+      }
+      setHand(track.base + up);
+    };
+
+    const onEnd = () => {
+      const done = track;
+      track = null;
+      if (!done?.claimed) return;
+
+      const last = swipe[swipe.length - 1];
+      const up = done.y - last.y;
+      const at = clamp01(paneFor(done.base + up, travel) / travel);
+
+      const first = swipe[0];
+      const span = last.at - first.at;
+      const speed = span > 0 ? (first.y - last.y) / span : 0;
+
+      setDragging(false);
+      settleTo(speed > FLICK || (speed >= -FLICK && at >= 0.5), at);
+    };
+
+    window.addEventListener("touchstart", onStart, { passive: true });
+    window.addEventListener("touchmove", onMove, { passive: false });
+    window.addEventListener("touchend", onEnd);
+    window.addEventListener("touchcancel", onEnd);
+    return () => {
+      window.removeEventListener("touchstart", onStart);
+      window.removeEventListener("touchmove", onMove);
+      window.removeEventListener("touchend", onEnd);
+      window.removeEventListener("touchcancel", onEnd);
+    };
+  }, [enabled, open, travel, settleTo]);
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {

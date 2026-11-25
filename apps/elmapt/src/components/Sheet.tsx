@@ -81,6 +81,7 @@ export function Sheet({ sheet }: { sheet: SheetState }) {
           tabIndex={open ? undefined : -1}
           onClick={keyboardOnly}
           {...handle}
+          data-sheet-handle
         />
 
         <section

@@ -12,7 +12,7 @@ export function Footer({
   onToggle: () => void;
 }) {
   return (
-    <footer className="footer elm-surface" {...handle}>
+    <footer className="footer elm-surface" {...handle} data-sheet-handle>
       <button
         type="button"
         className="footer__grab"

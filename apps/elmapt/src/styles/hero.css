@@ -20,7 +20,18 @@
   height: 100%;
   object-fit: cover;
 
-  object-position: var(--hero-focus, 50% 50%);
+  /* Frames are 3:2. On a screen taller than that, the sides are cropped:
+   * slide the frame so the subject at --hero-fx sits mid-screen, clamped
+   * so no edge shows. Wider screens crop top and bottom: --hero-fy is a
+   * plain object-position percentage there. --hero-bw and --hero-iw are
+   * measured in Hero.tsx. */
+  object-position:
+    clamp(
+      calc(var(--hero-bw, 100%) - var(--hero-iw, 100%)),
+      calc(var(--hero-bw, 100%) / 2 - var(--hero-fx, 0.5) * var(--hero-iw, 100%)),
+      0px
+    )
+    var(--hero-fy, 50%);
 
   opacity: 0;
   transform: scale(1.012);

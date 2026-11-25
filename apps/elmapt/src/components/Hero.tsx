@@ -4,6 +4,28 @@ import { site } from "../site/site";
 import { useCarousel } from "../hooks/useCarousel";
 import "../styles/hero.css";
 
+/* `focus` is "x% y%": x is the subject's centre across the frame, y the
+ * object-position used when top and bottom are cropped. */
+const heroFocus = (focus: string): ImageVars => {
+  const [x = "50%", y = "50%"] = focus.split(" ");
+  return { "--hero-fx": parseFloat(x) / 100, "--hero-fy": y } as ImageVars;
+};
+
+/* Publishes the hero's width and the width a 3:2 frame covers it at, so
+ * CSS can centre each frame's subject when the sides are cropped. */
+const ASPECT = site.hero.width / site.hero.height;
+
+const measureCover = (node: HTMLElement | null) => {
+  if (!node) return;
+  const observer = new ResizeObserver(() => {
+    const { width, height } = node.getBoundingClientRect();
+    node.style.setProperty("--hero-bw", `${width}px`);
+    node.style.setProperty("--hero-iw", `${Math.max(width, height * ASPECT)}px`);
+  });
+  observer.observe(node);
+  return () => observer.disconnect();
+};
+
 /* Carousel frames ship at 960, 1440 and 1920 wide (the 1920 is the bare name). */
 const heroSrcSet = (src: string) =>
   `${src.replace(/\.webp$/, "_960.webp")} 960w, ${src.replace(/\.webp$/, "_1440.webp")} 1440w, ${src} 1920w`;
@@ -14,7 +36,8 @@ type FrameVars = CSSProperties & {
 };
 
 type ImageVars = CSSProperties & {
-  "--hero-focus"?: string;
+  "--hero-fx"?: number;
+  "--hero-fy"?: string;
 };
 
 const frames = site.hero.frames;
@@ -43,7 +66,7 @@ function HeroFrame({ frame, index, layer, lead, debut, settle }: FrameProps) {
     <img
       ref={capture}
       className={`hero__img hero__img--${layer}${debut ? " hero__img--debut" : ""}`}
-      style={{ "--hero-focus": frame.focus } as ImageVars}
+      style={heroFocus(frame.focus)}
       src={frame.src}
       srcSet={heroSrcSet(frame.src)}
       sizes="100vw"
@@ -121,6 +144,7 @@ export function Hero() {
 
   return (
     <section
+      ref={measureCover}
       className={`hero${armed ? "" : " elm-skeleton"}`}
       aria-label={site.name}
       style={{ "--hero-backdrop": site.hero.backdrop } as FrameVars}
